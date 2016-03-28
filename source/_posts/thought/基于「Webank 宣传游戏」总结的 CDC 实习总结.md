@@ -168,12 +168,14 @@ loading 改了两版，第一版是右手是举起来不停挥手，但是这样
 
 因为这个游戏只能在微信端打开，所以可以直接利用微信 JSSDK 的网络状态获取接口实现首屏部分的自动播放功能。
     
+```javascript
     wx.getNetworkType({
         complete: function (res) {
             // 可以获取网络类型 res.networkType
             // 可以在这里执行音频播放
         }
     });
+```
 
 另外，上述的 `requestAnimationFrame()` 函数放在交互行为「点击」触发后执行的 ，而把音频写在这个函数里面执行播放和暂停操作时，依然不能在 iOS 端低版本微信中听到声音。
 

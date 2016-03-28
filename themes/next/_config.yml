@@ -28,10 +28,10 @@ rss:
 menu:
   home: /
   web: /categories/Web
-  linux: /categories/Linux
   thought: /categories/Thought
+  linux: /categories/Linux
   skill: /categories/Skill
-  life: /categories/Life
+  #life: /categories/Life
   #archives: /archives
   #categories: /categories
   #about: /about
@@ -53,11 +53,11 @@ menu_icons:
   thought: lightbulb-o
   skill: magic
   life: heartbeat
-  #about: user
-  #categories: th
-  #tags: tags
-  #archives: archive
-  #commonweal: heartbeat
+  about: user
+  categories: th
+  tags: tags
+  archives: archive
+  commonweal: heartbeat
 
 
 

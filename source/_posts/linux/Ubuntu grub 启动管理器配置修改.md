@@ -3,7 +3,8 @@ date: 2015-05-09 09:50:00
 categories: Linux
 ---
 
-接下来介绍一下安装完 Win 8.1 和 Ubuntu 双系统之后，修改 grub 启动管理器默认启动项的方法。
+介绍一下安装完 Win 10 和 Ubuntu 双系统之后，修改 grub 启动管理器默认启动项的方法。
+（标注一下，这里是传统的 MBR 方案，不是 GPT ＋ UEFI）
 <!--more-->
 
 通过 grub 选择进入的操作系统，一般是在先装 Windows ，后装 Ubuntu 的情况下。
@@ -32,12 +33,12 @@ categories: Linux
 
 而 `GRUB_TIMEOUT=10` 这一行代表的是用户等待时间，原本是 10 秒。
 如果用户在 10 秒内不进行选择，则默认进入 `GRUB_DEFAULT` 指定的启动项。
-个人觉得 10 秒太浪费生命，于是我把它改成了 3 秒。
+10 秒太浪费生命了，于是我把它改成了 3 秒。
 
 修改完毕之后保存文件，并执行该命令：
 
     sudo update-grub
-    
+
 该命令会根据刚刚修改的 grub 文件自动生成一个新的 grub.cfg 文件，至此大功告成。
 
   [1]: http://jingyan.baidu.com/article/1876c852942fea890b13760b.htmlhttp://jingyan.baidu.com/article/1876c852942fea890b13760b.html
