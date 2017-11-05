@@ -82,10 +82,5 @@ deploy:
   repository: https://github.com/Deol/deol.github.io.git
   branch: master
 social:
-  知乎: http://www.zhihu.com/people/aeolus0
-  豆瓣: http://www.douban.com/people/aeol
-  GitHub: https://github.com/Deol
-  微博: http://weibo.com/aeolus7
-
-# 百度统计
-baidu_analytics: da8ea7f8728f82dbfaba14300507b7d0
+  GitHub: https://github.com/Deol || github
+  微博: http://weibo.com/aeolus7 || weibo
