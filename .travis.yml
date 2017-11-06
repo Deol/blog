@@ -1,0 +1,36 @@
+language: node_js
+node_js: stable
+
+# Travis-CI Caching
+cache:
+  directories:
+    - node_modules
+
+# S: Build Lifecycle
+install:
+  - npm install
+
+before_script:
+  - npm install -g hexo-cli
+
+script:
+  - hexo g
+
+after_script:
+  - cd public
+  - git init
+  - git config user.name "Aeo"
+  - git config user.email "A_doz@126.com"
+  - git add -A
+  - git commit -m ":rocket:Update docs"
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:master
+# E: Build LifeCycle
+
+branches:
+  only:
+    - dev
+
+env:
+  global:
+    - GH_REF: github.com/Deol/deol.github.io.git
+    - secure: "clmDVO6SUcUS3RoTb9oqICyqmAMqeFEPLjOmE5+/lzC7ll8CaG8vFwVpnCx1qLyCDJK+igxjllRybebcOawv3SdB0gyuUc3+BrHR8PGSPpQFykp7Ufi/mZUc67DLjhzJms0SG0lw2hqpohGqQ/Y6ahRbW4KYpB+Qct78FtFvBvMT6PETYO1ZfkKUJwE8j2gPArJHzxYzf65SKWRZesbZopuDq0cILnIHJSddEMsN8aj1Uc7ZGh76gtCuGsRY7FcEEShuNEm7WL0jWEHmcbxnLBx8dLYGJwkthlsWZxhHwVMJ3P2YJdmghD1GrVRmI48NH+ERjcLpzqz1rceq6wr71rgZroqX3RQVrxdxXdnyNqoCTd6cBfvEYmyuiOVktBnsrLidn+0KcQRnoQ+Vu8RkCj3dkTsrJ1meacRy/MVVLiSUN59jX9YGYZtrVSG4xQkti+kLqSx3prhgiumAz6UEmHNkB56lrxipA24TSaucVW94UD7LDOZL/iCwjttZLBK0PrBg+5ryjpvHuamtJQh2fTRTGja336NM0vemDUQB9gJlaFD9DkNFd+pBbqB321kBhIMYtMo24YiS/f3EPIVlaxQOmRW+YUG9nobVJKjfZjxxIGYBHZxieqIhgsH8KEmF+h6dNTUqa8/eBFCrftdgneFMrdx+rk0vBYlDbgIha/E="

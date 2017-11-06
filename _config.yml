@@ -81,6 +81,10 @@ deploy:
   type: git
   repository: https://github.com/Deol/deol.github.io.git
   branch: master
+  message: ":rocket: Deploying stuff."
 social:
   GitHub: https://github.com/Deol || github
   微博: http://weibo.com/aeolus7 || weibo
+
+# Baidu Analytics ID
+baidu_analytics: da8ea7f8728f82dbfaba14300507b7d0
