@@ -1017,9 +1017,9 @@ vendors:
   # Internal version: 3.3.0
   # See: https://github.com/vinta/pangu.js
   # Example:
-  # pangu: //cdn.jsdelivr.net/npm/pangu@3.3.0/dist/browser/pangu.min.js
+  pangu: //cdn.jsdelivr.net/npm/pangu@3.3.0/dist/browser/pangu.min.js
   # pangu: //cdnjs.cloudflare.com/ajax/libs/pangu/3.3.0/pangu.min.js
-  pangu:
+  # pangu:
 
   # needMoreShare2
   # See: https://github.com/revir/need-more-share2
