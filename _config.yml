@@ -6,8 +6,9 @@
 title: Aeo's Blog
 subtitle:
 description: 眼里要有点光。
+keywords:
 author: Aeo
-language: zh-Hans
+language: zh-CN
 email: A_doz@126.com
 timezone:
 
@@ -52,7 +53,7 @@ index_generator:
   path: ''
   per_page: 10
   order_by: -date
-  
+
 # Category & Tag
 default_category: uncategorized
 category_map:
