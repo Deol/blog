@@ -123,7 +123,7 @@ seo: true
 index_with_subtitle: false
 
 # Automatically add external URL with BASE64 encrypt & decrypt.
-exturl: false
+exturl: true
 
 
 # ---------------------------------------------------------------
@@ -136,11 +136,10 @@ exturl: false
 # Value before `||` delimeter is the target link.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, question icon will be loaded.
 menu:
-  home: / || home
-  web: /categories/Web || html5
-  thought: /categories/Thought || lightbulb-o
-  linux: /categories/Linux || linux
-  skill: /categories/Skill || magic
+  Home: / || home
+  Web: /categories/Web || html5
+  Skill: /categories/Skill || magic
+  Linux: /categories/Linux || linux
   #life: /categories/Life || heartbeat
   #about: /about/ || user
   #tags: /tags/ || tags
@@ -295,7 +294,7 @@ post_meta:
   item_text: true
   created_at: true
   updated_at:
-    enabled: true
+    enabled: false
     # If true, show updated date label only if `updated date` different from 'created date' (post edited in another day than was created).
     # And if post will edited in same day as created, edited time will show in popup title under created time label.
     # If false show anyway, but if post edited in same day, show only edited time.
@@ -699,10 +698,10 @@ firestore:
 # Show Views/Visitors of the website/page with busuanzi.
 # Get more information on http://ibruce.info/2015/04/04/busuanzi
 busuanzi_count:
-  enable: false
-  total_visitors: true
+  enable: true
+  total_visitors: false
   total_visitors_icon: user
-  total_views: true
+  total_views: false
   total_views_icon: eye
   post_views: true
   post_views_icon: eye

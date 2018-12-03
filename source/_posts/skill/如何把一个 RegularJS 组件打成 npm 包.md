@@ -1,6 +1,6 @@
 title: "如何把一个 RegularJS 组件打成 npm 包"
 date: 2017-03-04 19:18:17
-categories: Web
+categories: Skill
 ---
 
 本篇基于 RegularJS 热区组件，分享一下从项目初始化到最终打包发布的整个流程。
@@ -18,11 +18,11 @@ categories: Web
 ## 1. 项目初始化
 
 #### 1. 在 GitHub 上创建项目仓库，添加 README 和 License
-    
+
 没什么好说的，License 一般设置成 MIT（开源万岁），详细协议介绍可查：[HELP](https://choosealicense.com/)。
 
 #### 2. clone 到本地，设置 git config
-    
+
 本地全局的 git config 文件一般设置为公司的邮箱和用户名。为了避免泄露信息，可在初始化时提前进行项目层面的 config 设置：
 
 ```shell

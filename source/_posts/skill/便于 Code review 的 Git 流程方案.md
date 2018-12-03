@@ -1,6 +1,6 @@
 title: "便于 Code review 的 Git 流程方案"
 date: 2017-06-26 21:01:26
-categories: Web
+categories: Skill
 ---
 
 > 设定读者已经了解基本的 Git 操作和 Git 分支管理策略。
@@ -233,7 +233,7 @@ git cherry-pick commit-SHA
 
 若要把 rebase 当做 `git pull` 的预设值，可以修改 `~/.gitconfig` 让所有 tracked branches 自动使用该设定：
 
-    [branch]  
+    [branch]
       autosetuprebase = always
 
 ## 附录

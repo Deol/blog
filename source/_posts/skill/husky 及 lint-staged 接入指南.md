@@ -1,6 +1,6 @@
 title: "husky 及 lint-staged 接入指南"
 date: 2017-06-07 21:20:19
-categories: Web
+categories: Skill
 ---
 
 一、接入流程
@@ -102,9 +102,9 @@ $ npm i -D eslint eslint-config-kaola husky lint-staged
 ```
 
 > #### 钩子触发流程说明
-> 
+>
 > 当开发者执行 `git add` 操作将代码提交到暂存区后，再执行 `git commit` 操作时：
-> 
+>
 > 1. 由于 husky 在 .git/hooks 中写入了 pre-commit 钩子，该钩子在 `git commit` 执行时被触发，执行 `npm run precommit` 脚本（即 lint-staged 命令）；
 > 2. lint-staged 利用配置的文件过滤路径，对暂存区文件一个个进行匹配，匹配成功时，运行 eslint --fix 并自动将修改添加到暂存区：
 > ```bash
