@@ -5,7 +5,7 @@
 # Site
 title: Aeo's Blog
 subtitle:
-description: 眼里要有点光。
+description: Reboot Everything.
 keywords:
 author: Aeo
 language: zh-CN
@@ -85,7 +85,9 @@ deploy:
   message: ":rocket: Deploying stuff."
 social:
   GitHub: https://github.com/Deol || github
-  微博: http://weibo.com/aeolus7 || weibo
+  知乎: https://www.zhihu.com/people/aeolus0 || university
+  豆瓣: https://www.douban.com/people/aeol || book
+  微博: https://weibo.com/619515016 || weibo
 
 # Baidu Analytics ID
 baidu_analytics: da8ea7f8728f82dbfaba14300507b7d0
