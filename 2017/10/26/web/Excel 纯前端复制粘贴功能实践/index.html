@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="背景后台系统中经常存在通过上传 Excel 导入数据的功能需求。 但运营方在使用该功能时经常会遇到这些问题：  Excel 文件需要修改至符合系统要求； 上传时可能需要进入较深的文件路径定位文件； 数据过多时需长时间等待系统响应，甚至很可能上传失败； 发现 Excel 中存在错误，修改重传时又可能循环上述问题。  换思路，若直接通过 Ctrl + C 和 Ctrl + V 复制粘贴 Excel 中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Excel 纯前端复制粘贴功能实践">
+<meta property="og:url" content="http://aeodu.com/2017/10/26/web/Excel 纯前端复制粘贴功能实践/index.html">
+<meta property="og:site_name" content="Aeo&#39;s Blog">
+<meta property="og:description" content="背景后台系统中经常存在通过上传 Excel 导入数据的功能需求。 但运营方在使用该功能时经常会遇到这些问题：  Excel 文件需要修改至符合系统要求； 上传时可能需要进入较深的文件路径定位文件； 数据过多时需长时间等待系统响应，甚至很可能上传失败； 发现 Excel 中存在错误，修改重传时又可能循环上述问题。  换思路，若直接通过 Ctrl + C 和 Ctrl + V 复制粘贴 Excel 中">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://user-images.githubusercontent.com/4961878/32105865-9c876d04-bb5c-11e7-8def-c4ccd0ef0509.png">
+<meta property="og:updated_time" content="2020-04-04T17:42:55.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Excel 纯前端复制粘贴功能实践">
+<meta name="twitter:description" content="背景后台系统中经常存在通过上传 Excel 导入数据的功能需求。 但运营方在使用该功能时经常会遇到这些问题：  Excel 文件需要修改至符合系统要求； 上传时可能需要进入较深的文件路径定位文件； 数据过多时需长时间等待系统响应，甚至很可能上传失败； 发现 Excel 中存在错误，修改重传时又可能循环上述问题。  换思路，若直接通过 Ctrl + C 和 Ctrl + V 复制粘贴 Excel 中">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/4961878/32105865-9c876d04-bb5c-11e7-8def-c4ccd0ef0509.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://aeodu.com/2017/10/26/web/Excel 纯前端复制粘贴功能实践/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Excel 纯前端复制粘贴功能实践 | Aeo's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?da8ea7f8728f82dbfaba14300507b7d0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aeo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-web">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Web" rel="section"><i class="menu-item-icon fa fa-fw fa-html5"></i> <br>Web</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-skill">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Skill" rel="section"><i class="menu-item-icon fa fa-fw fa-magic"></i> <br>Skill</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-linux">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Linux" rel="section"><i class="menu-item-icon fa fa-fw fa-linux"></i> <br>Linux</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://aeodu.com/2017/10/26/web/Excel 纯前端复制粘贴功能实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aeo">
+      <meta itemprop="description" content="Reboot Everything.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aeo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Excel 纯前端复制粘贴功能实践
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-26 21:12:04" itemprop="dateCreated datePublished" datetime="2017-10-26T21:12:04+00:00">2017-10-26</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>后台系统中经常存在通过上传 Excel 导入数据的功能需求。</p>
+<p>但运营方在使用该功能时经常会遇到这些问题：</p>
+<ol>
+<li>Excel 文件需要修改至符合系统要求；</li>
+<li>上传时可能需要进入较深的文件路径定位文件；</li>
+<li>数据过多时需长时间等待系统响应，甚至很可能上传失败；</li>
+<li>发现 Excel 中存在错误，修改重传时又可能循环上述问题。</li>
+</ol>
+<p>换思路，若直接通过 <code>Ctrl + C</code> 和 <code>Ctrl + V</code> 复制粘贴 Excel 中的数据到页面中，上述问题似乎都能解决。<br><a id="more"></a></p>
+<p>试试实际效果： <a href="http://aeodu.com/regular-excel-clipboard">戳我</a></p>
+<p>具体项目代码： <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Rlb2wvcmVndWxhci1leGNlbC1jbGlwYm9hcmQ=" title="https://github.com/Deol/regular-excel-clipboard">戳我<i class="fa fa-external-link"></i></span></p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol>
+<li>剪贴板操作</li>
+</ol>
+<p>总共有 6 个剪贴板事件：</p>
+<ul>
+<li>beforecopy：在发生复制操作前触发。</li>
+<li>copy：在发生复制操作时触发。</li>
+<li>beforecut：在发生剪切操作前触发。</li>
+<li>cut：在发生剪切操作时触发。</li>
+<li>beforepaste：在发生粘贴操作前触发。</li>
+<li><strong>paste：在发生粘贴操作时触发（划重点）。</strong></li>
+</ul>
+<p>要访问剪贴板中的数据，可以使用 clipboardData 对象。</p>
+<p>基本上在非 IE 类浏览器中，为了防止对剪贴板的未授权访问，只有在处理剪贴板事件期间 clipboardData 对象才能被访问。因此为了确保跨浏览器兼容性，建议在发生剪贴板事件期间使用该对象。</p>
+<p>该对象有三个方法：getData()、setData() 和 clearData()。<strong>其中，getData()<br>用于从剪贴板中取得数据，它接受一个参数，一般为 <code>text/plain</code>，即要取得的数据的格式。</strong></p>
+<ol start="2">
+<li>contenteditable</li>
+</ol>
+<p>富文本编辑很多时候可以由 div 模拟 textarea 文本框实现，只使用需要 contenteditable 属性。但此时若文本中包含样式，HTML 及样式信息也会被贴入。此时想要往在表格单项中粘贴纯文字，就需要做过滤。</p>
+<p>从 <span class="exturl" data-url="aHR0cHM6Ly93M2MuZ2l0aHViLmlvL2VkaXRpbmcvY29udGVudEVkaXRhYmxlLmh0bWwjY29udGVudGVkaXRhYmxl" title="https://w3c.github.io/editing/contentEditable.html#contenteditable">W3C 规范草案<i class="fa fa-external-link"></i></span> 可知，contenteditable 分为以下几类：</p>
+<ul>
+<li>inherit（默认值）</li>
+<li>true / “”</li>
+<li>false</li>
+<li>events</li>
+<li>caret</li>
+<li>typing</li>
+<li><strong>plaintext-only（直接将粘贴数据过滤为纯文本）</strong></li>
+</ul>
+<p>那么，直接利用 <code>contenteditable=&quot;plaintext-only&quot;</code> 就能解决问题。</p>
+<h3 id="核心实现"><a href="#核心实现" class="headerlink" title="核心实现"></a>核心实现</h3><ol>
+<li>获取剪贴板数据</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 获取剪贴板中的表格数据，并将其处理成可用的数据</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>e </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">getClipboardData(e = &#123;&#125;) &#123;</span><br><span class="line">    <span class="keyword">let</span> clipboard = e.event.clipboardData;</span><br><span class="line">    <span class="keyword">let</span> data = clipboard.getData(<span class="string">'text/plain'</span>).trim();</span><br><span class="line">    <span class="keyword">if</span>(isSimpleString(data)) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            type: <span class="string">'string'</span>,</span><br><span class="line">            data</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        type: <span class="string">'table'</span>,</span><br><span class="line">        data: data.split(<span class="function">(<span class="params"><span class="regexp">/\r\n?/g</span></span>)).<span class="params">map</span>(<span class="params">(row = &#123;&#125;</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> row.split(<span class="string">'\t'</span>).map(<span class="function"><span class="params">item</span> =&gt;</span> item.trim());</span><br><span class="line">        &#125;).filter(<span class="function">(<span class="params">item = &#123;&#125;</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> item.some(<span class="function"><span class="params">subItem</span> =&gt;</span> !!subItem);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p>执行粘贴操作</p>
+<ul>
+<li>流程图</li>
+</ul>
+</li>
+</ol>
+<p><img src="https://user-images.githubusercontent.com/4961878/32105865-9c876d04-bb5c-11e7-8def-c4ccd0ef0509.png" alt="image"></p>
+<ul>
+<li><p>实现原理</p>
+<p>实际上，除非当前粘贴数据为纯文本且粘贴位置为表格项中，此时直接利用 <code>contenteditable=&quot;plaintext-only&quot;</code> 实现粘贴操作。</p>
+<p>其它所有情况，都利用 <code>e.preventDefault()</code> 阻止默认事件，统一通过更新数据进而更新视图，利用数据驱动方式实现粘贴操作。</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 粘贴操作，对用户进行粘贴的数据进行处理</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Object&#125;</span> </span>e </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">paste(e) &#123;</span><br><span class="line">    <span class="keyword">let</span> data = <span class="keyword">this</span>.data;</span><br><span class="line">    <span class="keyword">let</span> &#123; clipboard, table &#125; = <span class="keyword">this</span>.$refs;</span><br><span class="line">    <span class="keyword">let</span> excelInfo = <span class="keyword">this</span>.getClipboardData(e);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 往表格中粘贴纯字符串时不做不做处理直接贴入，样式由单项的 contenteditable="plaintext-only" 去除</span></span><br><span class="line">    <span class="keyword">if</span>(excelInfo.type === <span class="string">'string'</span>) &#123;</span><br><span class="line">        <span class="comment">// 在输入框中粘贴字符串时直接阻止</span></span><br><span class="line">        <span class="keyword">if</span>([e.target, e.target.parentNode].indexOf(clipboard) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">            e &amp;&amp; e.preventDefault();</span><br><span class="line">            <span class="built_in">window</span>.alert(<span class="string">'只能粘贴 Excel 表格数据哦~'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    e &amp;&amp; e.preventDefault();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 未设置过数据时直接贴入表格</span></span><br><span class="line">    <span class="keyword">if</span>(!ut.existTable(clipboard, table)) &#123;</span><br><span class="line">        <span class="keyword">this</span>.updateClipboard(excelInfo.data);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...存在数据时的拼接覆盖处理逻辑</span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 更新操作区域的表格数据，重新渲染模板</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Array&#125;</span>   </span>list </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Boolean&#125;</span> <span class="variable">concat</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Number&#125;</span>  <span class="variable">reload</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">updateClipboard(list = [], concat = <span class="literal">false</span>, reload = <span class="built_in">Math</span>.random()) &#123;</span><br><span class="line">    <span class="keyword">let</span> &#123; clipboard, table &#125; = <span class="keyword">this</span>.$refs;</span><br><span class="line">    <span class="comment">// 拼接时，之前数据可能经过用户编辑，与当前 Model 不一致</span></span><br><span class="line">    <span class="keyword">let</span> prevList = ut.getTableData(clipboard, table);</span><br><span class="line">    <span class="built_in">Object</span>.assign(<span class="keyword">this</span>.data, &#123;</span><br><span class="line">        list: concat ? prevList.concat(list) : list,</span><br><span class="line">        content: <span class="string">`<span class="subst">$&#123;boardTpl&#125;</span>&lt;input type="hidden" data-reload=<span class="subst">$&#123;reload&#125;</span> /&gt;`</span></span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">this</span>.$update();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="其他总结"><a href="#其他总结" class="headerlink" title="其他总结"></a>其他总结</h3><ul>
+<li>模拟 placeholder</li>
+</ul>
+<p>利用 div 的 <code>contenteditable=&quot;true&quot;</code> 可以实现 textarea 模拟功能，但是在 div placeholder 属性是不生效的。</p>
+<p>此时可以这么处理：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HTML --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-placeholder</span>=<span class="string">"在这里粘贴从Excel表中复制的数据，注意确保粘贴表头哦~"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- CSS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line">    div:empty:before &#123;</span><br><span class="line">        content: attr(data-placeholder);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/04/web/MVVM 式的热区组件开发/" rel="next" title="MVVM 式的热区组件开发">
+                <i class="fa fa-chevron-left"></i> MVVM 式的热区组件开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTQyOC8xNzk3NQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Aeo">
+            
+              <p class="site-author-name" itemprop="name">Aeo</p>
+              <p class="site-description motion-element" itemprop="description">Reboot Everything.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Rlb2w=" title="GitHub &rarr; https://github.com/Deol"><i class="fa fa-fw fa-github"></i>GitHub</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9hZW9sdXMw" title="知乎 &rarr; https://www.zhihu.com/people/aeolus0"><i class="fa fa-fw fa-university"></i>知乎</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuZG91YmFuLmNvbS9wZW9wbGUvYWVvbA==" title="豆瓣 &rarr; https://www.douban.com/people/aeol"><i class="fa fa-fw fa-book"></i>豆瓣</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93ZWliby5jb20vNjE5NTE1MDE2" title="微博 &rarr; https://weibo.com/619515016"><i class="fa fa-fw fa-weibo"></i>微博</span>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心实现"><span class="nav-number">3.</span> <span class="nav-text">核心实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他总结"><span class="nav-number">4.</span> <span class="nav-text">其他总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aeo</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v6.6.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2017/10/26/web/Excel 纯前端复制粘贴功能实践/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+    
+  
+  <script src="//cdn.jsdelivr.net/npm/pangu@3.3.0/dist/browser/pangu.min.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.6.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

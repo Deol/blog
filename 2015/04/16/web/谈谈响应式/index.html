@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="上一篇说到，响应式是跨终端的其中一种实现方式。那到底，响应式具体的定义是什么？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈响应式">
+<meta property="og:url" content="http://aeodu.com/2015/04/16/web/谈谈响应式/index.html">
+<meta property="og:site_name" content="Aeo&#39;s Blog">
+<meta property="og:description" content="上一篇说到，响应式是跨终端的其中一种实现方式。那到底，响应式具体的定义是什么？">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-04T17:42:55.881Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谈谈响应式">
+<meta name="twitter:description" content="上一篇说到，响应式是跨终端的其中一种实现方式。那到底，响应式具体的定义是什么？">
+
+
+
+
+
+
+  <link rel="canonical" href="http://aeodu.com/2015/04/16/web/谈谈响应式/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>谈谈响应式 | Aeo's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?da8ea7f8728f82dbfaba14300507b7d0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aeo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-web">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Web" rel="section"><i class="menu-item-icon fa fa-fw fa-html5"></i> <br>Web</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-skill">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Skill" rel="section"><i class="menu-item-icon fa fa-fw fa-magic"></i> <br>Skill</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-linux">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Linux" rel="section"><i class="menu-item-icon fa fa-fw fa-linux"></i> <br>Linux</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://aeodu.com/2015/04/16/web/谈谈响应式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aeo">
+      <meta itemprop="description" content="Reboot Everything.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aeo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">谈谈响应式
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-04-16 14:52:04" itemprop="dateCreated datePublished" datetime="2015-04-16T14:52:04+00:00">2015-04-16</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上一篇说到，响应式是跨终端的其中一种实现方式。那到底，响应式具体的定义是什么？<br><a id="more"></a></p>
+<h2 id="什么是响应式"><a href="#什么是响应式" class="headerlink" title="什么是响应式"></a>什么是响应式</h2><p>响应式网页设计（RWD，Responsive Web Design）这个术语由 Ethan Marcott 提出，它是弹性网格布局、弹性图片、媒体和媒体查询三种开发技巧的整合。</p>
+<p>一切的手段都服务于目的，为了实现跨终端，响应式并不一定是最佳选择。在预算充足的情况下，根据终端检测跳转到不同的模板，这样就能基于用户的设备、位置、连接速度，以及包括技术特性在内的其他因素为其提供不同的内容、设计和交互，大大提升用户体验。</p>
+<p>然而，并不是所有项目都有这样的先决条件。在大多数情况下，根据不同设备不同视口大小提供与之匹配还是优先选择。走得更远一点， 2014 年定稿的 HTML5 为我们提供了更多且更加语义化的标签， CSS3 的媒体查询更是响应式设计不可或缺的组成部分。</p>
+<p>而在移动端上网人数数量越来越庞大的现在，「移动优先」也成为了现在优先的设计理念。也就是先考虑移动端的设计，再细化到 PC 端，并遵从「内容优先」的理念。</p>
+<p>下面介绍一下使用响应式的一些基本技巧。</p>
+<h2 id="Viewport"><a href="#Viewport" class="headerlink" title="Viewport"></a>Viewport</h2><p>在实现响应式设计时，第一步我们会在 HTML 文件的 <code>&lt;head&gt;</code> 标签里面插入一个 <code>&lt;meta&gt;</code> 标签：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta content = <span class="string">"initial-scale = 1, maximum-scale = 1, user-scalable = no, width = device-width"</span> name = <span class="string">"viewport"</span> /&gt;</span><br></pre></td></tr></table></figure>
+<p>它的意思是，页面 CSS 计算时使用的宽度根据设备给定值自适应、初始不缩放、不允许用户缩放、最大缩放因子为 1 。作用是，阻止移动浏览器自动调整页面大小。</p>
+<p>Viewport 最初只是 iOS Safari 的私有属性，但现在 CSS 的 <code>@viewport</code> 声明也已经可以使用。而现在最流行的 viewport meta 标签中基本的属性定义有：</p>
+<ul>
+<li>width：控制 Viewport 大小，单位 px，可以指定一个数值或常量 “device-width” ；iOS Safari 上默认值为 980，取值范围为 200 ～ 10000 。</li>
+<li>height：和 width 相对应，常量为 “device-height” ；iOS Safari 上取值范围为 233 ～ 10000 。</li>
+<li>initial-scale：初始缩放比例。</li>
+<li>maximum-scale：允许用户缩放的最大比例。</li>
+<li>minimun-scale： 允许用户缩放的最小比例。</li>
+<li>user-scalable：用户是否可以手动缩放。</li>
+</ul>
+<h2 id="媒体查询"><a href="#媒体查询" class="headerlink" title="媒体查询"></a>媒体查询</h2><p>设置完 viewport meta 标签后，任何浏览器都不能缩放页面了，现在我们可以针对不同视口修正设计效果，使用媒体查询针对设备特性设置特定的 CSS 样式。媒体查询由媒体类型和一个或多个检测媒体特性的条件表达式组成，这些用户检测的媒体特性包括：</p>
+<ul>
+<li>width：视口宽度。</li>
+<li>height：视口高度。</li>
+<li>device-width：渲染表面（设备屏幕）的宽度。</li>
+<li>device-height：渲染表面（设备屏幕）的高度。</li>
+<li>orientation：检查设备处于横向还是纵向。</li>
+<li>aspect-ratio：基于视口宽度和高度的宽高比。该值包含代表了水平像素数 / 垂直像素数的比例。</li>
+<li>device-aspect-ratio：和 aspect-ratio 类似，描述了描述设备渲染平面宽度和高度的宽高比。</li>
+<li>color：指定输出设备每个像素单元的比特值。如果设备不支持输出颜色，则该值为 0 。</li>
+<li>color-index：设备的颜色索引表中的颜色数，值必须是非负整数。</li>
+<li>monochrome：指定单色帧缓冲区中每个像素的比特数。如果不是黑白设备，值为 0 。</li>
+<li>resolution：用来检测屏幕或打印机的分辨率，用每英寸（dpi）或每厘米（dpcm）像素点数的度量值来表示。</li>
+<li>scan：电视机的扫描方式，值为 progressive （逐行扫描）和 interlace （隔行扫描）两种。</li>
+<li>grid：用来检测输入设备是网格设备还是位图设备。</li>
+</ul>
+<p>以上列出那么多，但其实最常用的也就 width 和 device-width，其它的只是一并列出方便查阅。另外，在上述除 scan 和 grid 外的特性，都可用 min 和 max 前缀来创建查询范围。</p>
+<p>这里是一个简单的媒体查询例子：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">min-width:</span> <span class="number">320px</span>) <span class="keyword">and</span> (<span class="attribute">max-width:</span> <span class="number">768px</span>) &#123;</span><br><span class="line">//这里是最小宽度为 320px，最大宽度为 768px 的设备的 CSS 样式</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了遵循结构、表现和行为分离，我们会在样式表的开头设置基本样式，以便适应所有设计，然后在底部使用媒体查询来进一步重写相应部分。因为 CSS 后面的样式会覆盖前面的样式，除非前面的样式具有更高的针对性。</p>
+<p>另外，将不同媒体查询的样式保存在独立文件中并无太大好处。我们可以利用 gulp 这种前端构建工具对 js 文件和 css 文件进行压缩，以减少 HTTP 请求数量，从而导致网页加载变慢<code>注1</code>。</p>
+<p>而 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3Njb3R0amVobC9yZXNwb25k" title="https://github.com/scottjehl/respond">Response.js<i class="fa fa-external-link"></i></span> 是为 IE 8 及更低版本增加媒体查询支持的最快的 Js 工具，但它目前无法解析 CSS 的 @import 命令<code>注2</code> 。</p>
+<h2 id="百分比布局"><a href="#百分比布局" class="headerlink" title="百分比布局"></a>百分比布局</h2><ol>
+<li><p>将网页从固定布局修改为百分比布局，创造流动的弹性界面。《无懈可击的 Web 设计》一书中有一个简易可行的百分比宽度公式：</p>
+<pre><code>目标元素宽度 / 上下文元素宽度 = 百分比宽度
+</code></pre></li>
+<li><p>用 em 或者 rem 代替 px：</p>
+<p>我们都知道，根元素默认的 font-size 是 16px 。引用一下师弟的<span class="exturl" data-url="aHR0cDovL3d3dy56aGlodS5jb20vcXVlc3Rpb24vMjk1MzQyODUvYW5zd2VyLzQ0NzU3NDMz" title="http://www.zhihu.com/question/29534285/answer/44757433">知乎回答<i class="fa fa-external-link"></i></span>：</p>
+<blockquote>
+<p> em 是根据父元素字体大小定义的，父元素字体大小是多少 px，该子元素的 1em 就等于多少 px，所以用 em<br>很不方便的地方就是随时都要考虑父元素的字体大小，为了弥补这个缺点便出现了 rem 。<br>rem 跟 em 不同的地方在于 rem 是根据根元素（html）的字体大小来确定的。</p>
+</blockquote>
+</li>
+<li><p>弹性图片</p>
+<p>在现代浏览器（IE 7+）中想要实现图片随流动布局缩放非常简单，只需：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">	<span class="attribute">max-width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>注 1：HTTP 能减少网页加载时间的原因是，请求耗时比较长，而且请求虽然可以并发，但是也有限制，一般都是 6 个。</p>
+<p>注 2：@import 引用的 CSS 会等到页面被加载完再加载，因此在页面 DOM 加载完成到 CSS 导入完成中间可能会有一段时间页面上的内容没有样式，这是导致 FOUC （无样式内容闪烁）的罪魁祸首。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/04/03/web/谈谈跨终端/" rel="next" title="谈谈跨终端">
+                <i class="fa fa-chevron-left"></i> 谈谈跨终端
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/05/02/skill/正则表达式 · 查阅版/" rel="prev" title="正则表达式 · 查阅版">
+                正则表达式 · 查阅版 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTQyOC8xNzk3NQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Aeo">
+            
+              <p class="site-author-name" itemprop="name">Aeo</p>
+              <p class="site-description motion-element" itemprop="description">Reboot Everything.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Rlb2w=" title="GitHub &rarr; https://github.com/Deol"><i class="fa fa-fw fa-github"></i>GitHub</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9hZW9sdXMw" title="知乎 &rarr; https://www.zhihu.com/people/aeolus0"><i class="fa fa-fw fa-university"></i>知乎</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuZG91YmFuLmNvbS9wZW9wbGUvYWVvbA==" title="豆瓣 &rarr; https://www.douban.com/people/aeol"><i class="fa fa-fw fa-book"></i>豆瓣</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93ZWliby5jb20vNjE5NTE1MDE2" title="微博 &rarr; https://weibo.com/619515016"><i class="fa fa-fw fa-weibo"></i>微博</span>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是响应式"><span class="nav-number">1.</span> <span class="nav-text">什么是响应式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Viewport"><span class="nav-number">2.</span> <span class="nav-text">Viewport</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#媒体查询"><span class="nav-number">3.</span> <span class="nav-text">媒体查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#百分比布局"><span class="nav-number">4.</span> <span class="nav-text">百分比布局</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aeo</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v6.6.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2015/04/16/web/谈谈响应式/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+    
+  
+  <script src="//cdn.jsdelivr.net/npm/pangu@3.3.0/dist/browser/pangu.min.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.6.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

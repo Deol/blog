@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="把必须匹配的情况考虑周全并写出一个匹配结果符合预期的正则表达式很容易，但把不需要匹配的情况也考虑周全并确保它们都将被排除在匹配结果以外往往要困难得多。  正则表达式，一种几乎可以在所有的程序设计语言里和所有的计算机平台上使用的文字处理工具。它可以用来查找特定的信息（搜索），也可以用来查找并编辑特定的信息（替换）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式 · 查阅版">
+<meta property="og:url" content="http://aeodu.com/2015/05/02/skill/正则表达式 · 查阅版/index.html">
+<meta property="og:site_name" content="Aeo&#39;s Blog">
+<meta property="og:description" content="把必须匹配的情况考虑周全并写出一个匹配结果符合预期的正则表达式很容易，但把不需要匹配的情况也考虑周全并确保它们都将被排除在匹配结果以外往往要困难得多。  正则表达式，一种几乎可以在所有的程序设计语言里和所有的计算机平台上使用的文字处理工具。它可以用来查找特定的信息（搜索），也可以用来查找并编辑特定的信息（替换）。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-04T17:42:55.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则表达式 · 查阅版">
+<meta name="twitter:description" content="把必须匹配的情况考虑周全并写出一个匹配结果符合预期的正则表达式很容易，但把不需要匹配的情况也考虑周全并确保它们都将被排除在匹配结果以外往往要困难得多。  正则表达式，一种几乎可以在所有的程序设计语言里和所有的计算机平台上使用的文字处理工具。它可以用来查找特定的信息（搜索），也可以用来查找并编辑特定的信息（替换）。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://aeodu.com/2015/05/02/skill/正则表达式 · 查阅版/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>正则表达式 · 查阅版 | Aeo's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?da8ea7f8728f82dbfaba14300507b7d0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aeo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-web">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Web" rel="section"><i class="menu-item-icon fa fa-fw fa-html5"></i> <br>Web</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-skill">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Skill" rel="section"><i class="menu-item-icon fa fa-fw fa-magic"></i> <br>Skill</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-linux">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Linux" rel="section"><i class="menu-item-icon fa fa-fw fa-linux"></i> <br>Linux</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://aeodu.com/2015/05/02/skill/正则表达式 · 查阅版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aeo">
+      <meta itemprop="description" content="Reboot Everything.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aeo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">正则表达式 · 查阅版
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-05-02 16:45:00" itemprop="dateCreated datePublished" datetime="2015-05-02T16:45:00+00:00">2015-05-02</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Skill/" itemprop="url" rel="index"><span itemprop="name">Skill</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">把必须匹配的情况考虑周全并写出一个匹配结果符合预期的正则表达式很容易，但把不需要匹配的情况也考虑周全并确保它们都将被排除在匹配结果以外往往要困难得多。</blockquote>
+
+<p>正则表达式，一种几乎可以在所有的程序设计语言里和所有的计算机平台上使用的文字处理工具。它可以用来查找特定的信息（搜索），也可以用来查找并编辑特定的信息（替换）。<br><a id="more"></a></p>
+<p>正则表达式是区分大小写的。</p>
+<ul>
+<li>基本的元字符<code>注1</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">.</td>
+<td style="text-align:center">匹配除换行符外的任意单个字符，甚至 . 字符本身</td>
+</tr>
+<tr>
+<td style="text-align:left">&#124;</td>
+<td style="text-align:center">逻辑或操作符</td>
+</tr>
+<tr>
+<td style="text-align:left">[]</td>
+<td style="text-align:center">定义一个字符集合，匹配字符集合中的一个字符<code>注2</code></td>
+</tr>
+<tr>
+<td style="text-align:left">[^]</td>
+<td style="text-align:center">对一个字符集合（在其内部）进行取非匹配</td>
+</tr>
+<tr>
+<td style="text-align:left">-</td>
+<td style="text-align:center">定义一个区间（例如 [A-Z]），其首尾字符在 ASCII 字符表里</td>
+</tr>
+<tr>
+<td style="text-align:left">\</td>
+<td style="text-align:center">对一个字符转义，表示“这个字符有特殊含义，而非其本身含义”</td>
+</tr>
+</tbody>
+</table>
+<p>注 1：匹配的元字符不用作元字符时必须被转义。</p>
+<p>注 2：在字符集合里面使用的时候，像 . 和 + 这样的元字符将被解释为普通字符，不需要被转义，但转义了也没有坏处。</p>
+<hr>
+<ul>
+<li>数量元字符</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">*</td>
+<td style="text-align:center">匹配前一个字符（子表达式）的零次或多次重复</td>
+</tr>
+<tr>
+<td style="text-align:left">*?</td>
+<td style="text-align:center">* 的懒惰型版本<code>注3</code></td>
+</tr>
+<tr>
+<td style="text-align:left">+</td>
+<td style="text-align:center">匹配前一个字符（子表达式）的一次或多次重复</td>
+</tr>
+<tr>
+<td style="text-align:left">+?</td>
+<td style="text-align:center">+ 的懒惰型版本</td>
+</tr>
+<tr>
+<td style="text-align:left">?</td>
+<td style="text-align:center">匹配前一个字符（子表达式）的零次或一次重复</td>
+</tr>
+<tr>
+<td style="text-align:left">{n}</td>
+<td style="text-align:center">匹配前一个字符（子表达式）的 n 次重复</td>
+</tr>
+<tr>
+<td style="text-align:left">{m, n}</td>
+<td style="text-align:center">匹配前一个字符（子表达式）至少 m 次至多 n 次重复</td>
+</tr>
+<tr>
+<td style="text-align:left">{n, }</td>
+<td style="text-align:center">匹配前一个字符（子表达式） n 次或更多次次重复</td>
+</tr>
+<tr>
+<td style="text-align:left">{n, }?</td>
+<td style="text-align:center">{n, } 的懒惰版本</td>
+</tr>
+</tbody>
+</table>
+<p>注 3：“懒惰型”在这里的含义是匹配尽可能少的字符，与“贪婪型”元字符的行为模式刚好相反。</p>
+<hr>
+<ul>
+<li>位置元字符</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">^</td>
+<td style="text-align:center">匹配字符串的开头<code>注4</code></td>
+</tr>
+<tr>
+<td style="text-align:left">\A</td>
+<td style="text-align:center">匹配字符串的开头</td>
+</tr>
+<tr>
+<td style="text-align:left">$</td>
+<td style="text-align:center">匹配字符串的结束</td>
+</tr>
+<tr>
+<td style="text-align:left">\Z</td>
+<td style="text-align:center">匹配字符串的结束</td>
+</tr>
+<tr>
+<td style="text-align:left">\&lt;</td>
+<td style="text-align:center">匹配单词的开头</td>
+</tr>
+<tr>
+<td style="text-align:left">\&gt;</td>
+<td style="text-align:center">匹配单词的结束</td>
+</tr>
+<tr>
+<td style="text-align:left">\b</td>
+<td style="text-align:center">匹配单词边界，即一个单词的开始或结束<code>注5</code></td>
+</tr>
+<tr>
+<td style="text-align:left">\B</td>
+<td style="text-align:center">\b 的反义</td>
+</tr>
+</tbody>
+</table>
+<p>注 4：这里的 ^ 用在其处于一个字符集合的外面并位于一个模式的开头的情况，通常用 ^\s* 匹配一个字符串的开头位置和随后的零个或多个空白字符。</p>
+<p>注 5：\b 只匹配位置，不匹配任何字符。它匹配的位置位于一个与 \w 匹配的字符和一个与 \W 匹配的字符之间，反之可知 \B 处于 \W\W 或 \w\w 之间。</p>
+<hr>
+<ul>
+<li>特殊字符元字符</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">[\b]</td>
+<td style="text-align:center">回退（并删除）一个字符（Backspace 键）<code>注6</code></td>
+</tr>
+<tr>
+<td style="text-align:left">\c</td>
+<td style="text-align:center">匹配一个控制字符</td>
+</tr>
+<tr>
+<td style="text-align:left">\d</td>
+<td style="text-align:center">任何一个数字字符（等价于 [0-9]）</td>
+</tr>
+<tr>
+<td style="text-align:left">\D</td>
+<td style="text-align:center">任何一个非数字字符（等价于 [^0-9]）</td>
+</tr>
+<tr>
+<td style="text-align:left">\f</td>
+<td style="text-align:center">换页符</td>
+</tr>
+<tr>
+<td style="text-align:left">\n</td>
+<td style="text-align:center">换行符<code>注7</code></td>
+</tr>
+<tr>
+<td style="text-align:left">\r</td>
+<td style="text-align:center">回车符</td>
+</tr>
+<tr>
+<td style="text-align:left">\s</td>
+<td style="text-align:center">任何一个空白字符（等价于 [\f\n\r\t\v]）</td>
+</tr>
+<tr>
+<td style="text-align:left">\S</td>
+<td style="text-align:center">任何一个非空白字符（等价于 [^\f\n\r\t\v]）</td>
+</tr>
+<tr>
+<td style="text-align:left">\t</td>
+<td style="text-align:center">制表符（Tab 符）</td>
+</tr>
+<tr>
+<td style="text-align:left">\v</td>
+<td style="text-align:center">垂直制表符</td>
+</tr>
+<tr>
+<td style="text-align:left">\w</td>
+<td style="text-align:center">匹配任意字母数字字符或下划线字符（等价于[a-zA-Z0-9_]）</td>
+</tr>
+<tr>
+<td style="text-align:left">\W</td>
+<td style="text-align:center">\w 的反义（等价于[^a-zA-Z0-9_]）</td>
+</tr>
+<tr>
+<td style="text-align:left">\x</td>
+<td style="text-align:center">匹配一个十六进制数字</td>
+</tr>
+<tr>
+<td style="text-align:left">\0</td>
+<td style="text-align:center">匹配一个八进制数字</td>
+</tr>
+</tbody>
+</table>
+<p>注 6：[\b] 不在类元字符 \s 的覆盖范围内，即在 \S 的覆盖范围内。</p>
+<p>注 7：Windows 系统使用 <code>\r\n\r\n</code> 匹配空行，而 Unix/Linux 系统使用 <code>\n\n</code> 匹配空行，使用 <code>[\r]?\n[\r]?\n</code> 可以同时适用于两种系统，而像这样把一个字符定义为一个集合可以增加可读性和避免产生误解。</p>
+<hr>
+<ul>
+<li>回溯引用<code>注8</code>和前后查找<code>注9</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">()</td>
+<td style="text-align:center">定义一个子表达式<code>注10</code></td>
+</tr>
+<tr>
+<td style="text-align:left">\1</td>
+<td style="text-align:center">匹配第 1 个子表达式；\2 代表第 2 个子表达式，以次类推<code>注11</code></td>
+</tr>
+<tr>
+<td style="text-align:left">?=</td>
+<td style="text-align:center">向前查找<code>注12</code></td>
+</tr>
+<tr>
+<td style="text-align:left">?&lt;=</td>
+<td style="text-align:center">向后查找，JavaScript 不支持</td>
+</tr>
+<tr>
+<td style="text-align:left">?!</td>
+<td style="text-align:center">负向前查找，即查找与向前查找不匹配的文本</td>
+</tr>
+<tr>
+<td style="text-align:left">?&lt;!</td>
+<td style="text-align:center">负向后查找，即查找与向后查找不匹配的文本</td>
+</tr>
+<tr>
+<td style="text-align:left">?()</td>
+<td style="text-align:center">条件（if then）</td>
+</tr>
+<tr>
+<td style="text-align:left">?()&#124;</td>
+<td style="text-align:center">条件（if then else）</td>
+</tr>
+</tbody>
+</table>
+<p>注 8：回溯引用指的是模式的后半部分引用在前半部分中定义的子表达式。它通常从 1 开始计数，在许多实现里，第 0 个匹配可以代表整个正则表达式。</p>
+<p>注 9：前后查找匹配本身其实是有返回结果的，只是这个结果的字节宽度永远是 0 而已。因此，前后查找操作有时也被称为零宽度（zero-width）匹配操作。</p>
+<p>注 10：划分子表达式的目的是把子表达式当成一个独立元素来使用。</p>
+<p>注 11：回溯引用语法在不同的正则表达式实现里有很大的差异， JavaScript 中需要用 $ 来代替 \ 。</p>
+<p>注 12：术语“消费”用来表述“匹配和返回文本”的含义。在向前查找里，被匹配的文本不包含在最终返回的匹配结果里，这被称为“不消费”。</p>
+<hr>
+<ul>
+<li>大小写转换</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">\E</td>
+<td style="text-align:center">结束 \L 或 \U 转换</td>
+</tr>
+<tr>
+<td style="text-align:left">\l</td>
+<td style="text-align:center">把下一个字符转换为小写</td>
+</tr>
+<tr>
+<td style="text-align:left">\L</td>
+<td style="text-align:center">把后面的字符转换为小写，直到遇见 \E 为止</td>
+</tr>
+<tr>
+<td style="text-align:left">\u</td>
+<td style="text-align:center">把后面的字符转换为大写</td>
+</tr>
+<tr>
+<td style="text-align:left">\U</td>
+<td style="text-align:center">把后面的字符转换为大写，直到遇见 \E 为止</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<ul>
+<li>匹配模式</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">(?m)</td>
+<td style="text-align:center">分行匹配模式<code>注13</code></td>
+</tr>
+</tbody>
+</table>
+<p>注 13：在分行匹配模式下，正则表达式引擎把行分隔符（换行符）当做一个字符串分隔符来对待。使用时，(?m) 必须出现在整个模式的最前面。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/04/16/web/谈谈响应式/" rel="next" title="谈谈响应式">
+                <i class="fa fa-chevron-left"></i> 谈谈响应式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/05/09/linux/Ubuntu grub 启动管理器配置修改/" rel="prev" title="Ubuntu grub 启动管理器配置修改">
+                Ubuntu grub 启动管理器配置修改 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTQyOC8xNzk3NQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Aeo">
+            
+              <p class="site-author-name" itemprop="name">Aeo</p>
+              <p class="site-description motion-element" itemprop="description">Reboot Everything.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Rlb2w=" title="GitHub &rarr; https://github.com/Deol"><i class="fa fa-fw fa-github"></i>GitHub</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9hZW9sdXMw" title="知乎 &rarr; https://www.zhihu.com/people/aeolus0"><i class="fa fa-fw fa-university"></i>知乎</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuZG91YmFuLmNvbS9wZW9wbGUvYWVvbA==" title="豆瓣 &rarr; https://www.douban.com/people/aeol"><i class="fa fa-fw fa-book"></i>豆瓣</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93ZWliby5jb20vNjE5NTE1MDE2" title="微博 &rarr; https://weibo.com/619515016"><i class="fa fa-fw fa-weibo"></i>微博</span>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aeo</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v6.6.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2015/05/02/skill/正则表达式 · 查阅版/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+    
+  
+  <script src="//cdn.jsdelivr.net/npm/pangu@3.3.0/dist/browser/pangu.min.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.6.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

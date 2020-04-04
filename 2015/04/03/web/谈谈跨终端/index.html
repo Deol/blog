@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前段时间读了《跨终端 Web》，对「跨终端」的理解也更深刻了些。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈跨终端">
+<meta property="og:url" content="http://aeodu.com/2015/04/03/web/谈谈跨终端/index.html">
+<meta property="og:site_name" content="Aeo&#39;s Blog">
+<meta property="og:description" content="前段时间读了《跨终端 Web》，对「跨终端」的理解也更深刻了些。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-04T17:42:55.881Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谈谈跨终端">
+<meta name="twitter:description" content="前段时间读了《跨终端 Web》，对「跨终端」的理解也更深刻了些。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://aeodu.com/2015/04/03/web/谈谈跨终端/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>谈谈跨终端 | Aeo's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?da8ea7f8728f82dbfaba14300507b7d0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aeo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-web">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Web" rel="section"><i class="menu-item-icon fa fa-fw fa-html5"></i> <br>Web</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-skill">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Skill" rel="section"><i class="menu-item-icon fa fa-fw fa-magic"></i> <br>Skill</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-linux">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Linux" rel="section"><i class="menu-item-icon fa fa-fw fa-linux"></i> <br>Linux</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://aeodu.com/2015/04/03/web/谈谈跨终端/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aeo">
+      <meta itemprop="description" content="Reboot Everything.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aeo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">谈谈跨终端
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2015-04-03 13:11:04" itemprop="dateCreated datePublished" datetime="2015-04-03T13:11:04+00:00">2015-04-03</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前段时间读了《跨终端 Web》，对「跨终端」的理解也更深刻了些。<br><a id="more"></a></p>
+<h2 id="什么是跨终端"><a href="#什么是跨终端" class="headerlink" title="什么是跨终端"></a>什么是跨终端</h2><p>随着 HTML5 标准的出台以及移动流量暴增， WebView 这种嵌入 App 的迷你浏览器的运用越发广泛。「移动优先」的概念已经开始风靡全球，它的核心是「聚焦业务本质」。它不仅仅指开发，而应该是指组织架构、产品规划、设计和开发这几个层面的移动优先。</p>
+<p>首先需要明确的是，「跨终端」并不等价于「响应式」。「跨终端」是最终希望达到的目的，而「响应式」只是实现这个目的的其中一种方式。其他方式包括：</p>
+<ul>
+<li><p>多站点：在 WAP 还是主流的移动互联网初期，一个门户站点可能就有一大堆地址。一个 PC 主业务可能就有数个甚至更多二级子域的站点，想实现跨终端需要巨大的服务器维护跳转成本。</p>
+</li>
+<li><p>多模板：它是多站点和响应式相结合的一种方式，一个页面只有一个 URL ，无须服务器端复杂的 URL 映射规则和用户代理（User Agent，简称 UA，它是最常用的终端检测方式）等手段进行跳转。虽然解决了响应式中 DOM 冗余的问题，但是由于页面存在多套模板，还需要在模板动态加载和首次服务器渲染等环节进行优化。</p>
+</li>
+<li><p>多平台：Native App 的确是实现跨终端的一种途径，它有更好的性能、更丰富的系统级功能的调用和标准的发布渠道（应用商店），但它的劣势也非常明显，开发和发布成本高，并存在政策、应用商店参差不齐等潜在的风险。</p>
+</li>
+</ul>
+<p>说回我们最熟悉的响应式，这部分我准备用另外的篇章详细说明。在这里只需要知道，响应式本质上是依赖 CSS 处理展现层面的差异，但是移动端和 PC 端在交互形式上存在的巨大差异也导致 DOM 结构上的差异，而它远远超过 CSS 所能控制的范围。</p>
+<h2 id="GBS"><a href="#GBS" class="headerlink" title="GBS"></a>GBS</h2><p>GBS （Graded Browser Support，分级浏览器支持）是 Yahoo 于 2008 年提出用于应对多浏览器兼容问题的。它的核心价值在于“以有限的测试资源最大化测试覆盖率”，将待测试的浏览器分层，利用优雅降级和渐进式增强去允许不同层级的浏览器为用户提供更少或更多的内容。</p>
+<p>优雅降级和渐进式增强的概念在《JavaScript DOM 编程艺术》也有提到，这里稍微解释一下。</p>
+<blockquote>
+<p>优雅降级（平稳退化）：不让繁杂的功能由于在不适合的平台上使用而成为负担，提供一些更适合的功能和交互给适合的平台。它并不是指不做某些功能。</p>
+<p>渐进增强：在高级浏览器上利用浏览器提供的资源为用户提供更好的体验。</p>
+</blockquote>
+<p>而在「移动优先」的现在，构造移动版本的 GBS 充满了挑战。</p>
+<p>我们需要基于统计数据源的覆盖面选择最有参考价值的数据来源，并且对比多个数据源以确保结论的准确可靠。以下数据源可供参考：</p>
+<ul>
+<li><span class="exturl" data-url="aHR0cDovL3dkbS5jb25zb2xlLmFsaXl1bi5jb20=" title="http://wdm.console.aliyun.com">淘宝无线数读<i class="fa fa-external-link"></i></span></li>
+<li><span class="exturl" data-url="aHR0cDovL3d3dy51bWVuZy5jb20v" title="http://www.umeng.com/">友盟<i class="fa fa-external-link"></i></span></li>
+<li><span class="exturl" data-url="aHR0cDovL210ai5iYWlkdS5jb20v" title="http://mtj.baidu.com/">百度移动统计<i class="fa fa-external-link"></i></span></li>
+</ul>
+<h2 id="Hybrid-App"><a href="#Hybrid-App" class="headerlink" title="Hybrid App"></a>Hybrid App</h2><p>Hybrid App 是 Native App 的一种改进形式，是 Native App 和 Mobile Web 两者混合开发的产物，它有跨平台、开发高效和发布快速的优点，但暂时也存在不适合应用在 CPU/GPU 密集类应用，以及静态资源从服务器端加载导致 UI 展示延迟的问题。</p>
+<p>不过，现在“ CSS3 Transform 3D ”引入 GPU 后大大缓解了 Web 动画不流畅问题。另一方面，也可以通过 Native App 拦截 WebView 通信加载已打包的公共库缓解静态资源从服务器端加载导致 UI 展示延迟的问题。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/20/web/「摘录」悟透JavaScript/" rel="next" title="「摘录」悟透 JavaScript">
+                <i class="fa fa-chevron-left"></i> 「摘录」悟透 JavaScript
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/04/16/web/谈谈响应式/" rel="prev" title="谈谈响应式">
+                谈谈响应式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTQyOC8xNzk3NQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Aeo">
+            
+              <p class="site-author-name" itemprop="name">Aeo</p>
+              <p class="site-description motion-element" itemprop="description">Reboot Everything.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Rlb2w=" title="GitHub &rarr; https://github.com/Deol"><i class="fa fa-fw fa-github"></i>GitHub</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9hZW9sdXMw" title="知乎 &rarr; https://www.zhihu.com/people/aeolus0"><i class="fa fa-fw fa-university"></i>知乎</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuZG91YmFuLmNvbS9wZW9wbGUvYWVvbA==" title="豆瓣 &rarr; https://www.douban.com/people/aeol"><i class="fa fa-fw fa-book"></i>豆瓣</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93ZWliby5jb20vNjE5NTE1MDE2" title="微博 &rarr; https://weibo.com/619515016"><i class="fa fa-fw fa-weibo"></i>微博</span>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是跨终端"><span class="nav-number">1.</span> <span class="nav-text">什么是跨终端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBS"><span class="nav-number">2.</span> <span class="nav-text">GBS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hybrid-App"><span class="nav-number">3.</span> <span class="nav-text">Hybrid App</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aeo</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v6.6.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2015/04/03/web/谈谈跨终端/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+    
+  
+  <script src="//cdn.jsdelivr.net/npm/pangu@3.3.0/dist/browser/pangu.min.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.6.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

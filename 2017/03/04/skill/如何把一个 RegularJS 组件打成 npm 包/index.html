@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本篇基于 RegularJS 热区组件，分享一下从项目初始化到最终打包发布的整个流程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何把一个 RegularJS 组件打成 npm 包">
+<meta property="og:url" content="http://aeodu.com/2017/03/04/skill/如何把一个 RegularJS 组件打成 npm 包/index.html">
+<meta property="og:site_name" content="Aeo&#39;s Blog">
+<meta property="og:description" content="本篇基于 RegularJS 热区组件，分享一下从项目初始化到最终打包发布的整个流程。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://aeo.ijarvis.cn/npms.png">
+<meta property="og:updated_time" content="2020-04-04T17:42:55.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何把一个 RegularJS 组件打成 npm 包">
+<meta name="twitter:description" content="本篇基于 RegularJS 热区组件，分享一下从项目初始化到最终打包发布的整个流程。">
+<meta name="twitter:image" content="http://aeo.ijarvis.cn/npms.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://aeodu.com/2017/03/04/skill/如何把一个 RegularJS 组件打成 npm 包/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>如何把一个 RegularJS 组件打成 npm 包 | Aeo's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?da8ea7f8728f82dbfaba14300507b7d0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aeo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-web">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Web" rel="section"><i class="menu-item-icon fa fa-fw fa-html5"></i> <br>Web</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-skill">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Skill" rel="section"><i class="menu-item-icon fa fa-fw fa-magic"></i> <br>Skill</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-linux">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Linux" rel="section"><i class="menu-item-icon fa fa-fw fa-linux"></i> <br>Linux</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://aeodu.com/2017/03/04/skill/如何把一个 RegularJS 组件打成 npm 包/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aeo">
+      <meta itemprop="description" content="Reboot Everything.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aeo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">如何把一个 RegularJS 组件打成 npm 包
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-03-04 19:18:17" itemprop="dateCreated datePublished" datetime="2017-03-04T19:18:17+00:00">2017-03-04</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Skill/" itemprop="url" rel="index"><span itemprop="name">Skill</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇基于 RegularJS 热区组件，分享一下从项目初始化到最终打包发布的整个流程。<br><a id="more"></a></p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>项目初始化</li>
+<li>开发环境准备，安装基础依赖</li>
+<li>将组件打包输出成多种模式!important</li>
+<li>进入开发</li>
+<li>包装工作</li>
+<li>最终发布</li>
+</ol>
+<h2 id="1-项目初始化"><a href="#1-项目初始化" class="headerlink" title="1. 项目初始化"></a>1. 项目初始化</h2><h4 id="1-在-GitHub-上创建项目仓库，添加-README-和-License"><a href="#1-在-GitHub-上创建项目仓库，添加-README-和-License" class="headerlink" title="1. 在 GitHub 上创建项目仓库，添加 README 和 License"></a>1. 在 GitHub 上创建项目仓库，添加 README 和 License</h4><p>没什么好说的，License 一般设置成 MIT（开源万岁），详细协议介绍可查：<span class="exturl" data-url="aHR0cHM6Ly9jaG9vc2VhbGljZW5zZS5jb20v" title="https://choosealicense.com/">HELP<i class="fa fa-external-link"></i></span>。</p>
+<h4 id="2-clone-到本地，设置-git-config"><a href="#2-clone-到本地，设置-git-config" class="headerlink" title="2. clone 到本地，设置 git config"></a>2. clone 到本地，设置 git config</h4><p>本地全局的 git config 文件一般设置为公司的邮箱和用户名。为了避免泄露信息，可在初始化时提前进行项目层面的 config 设置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git config user.name <span class="string">"GitHub 用户名"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config user.email <span class="string">"GitHub 邮箱"</span></span></span><br></pre></td></tr></table></figure>
+<p>这样提交代码时就以该用户名及邮箱作为用户信息了，此时执行查看命令可以看到：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat .git/config</span></span><br><span class="line">[user]</span><br><span class="line">    name = GitHub 用户名</span><br><span class="line">    email = GitHub 邮箱</span><br></pre></td></tr></table></figure>
+<h4 id="3-执行-npm-init，生成-package-json"><a href="#3-执行-npm-init，生成-package-json" class="headerlink" title="3. 执行 npm init，生成 package.json"></a>3. 执行 npm init，生成 package.json</h4><p>按提示一步步来完成配置即可。</p>
+<h2 id="2-开发环境准备，安装基础依赖"><a href="#2-开发环境准备，安装基础依赖" class="headerlink" title="2. 开发环境准备，安装基础依赖"></a>2. 开发环境准备，安装基础依赖</h2><p>这里偷了个懒，直接使用了 vue-cli 的 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3Z1ZWpzLXRlbXBsYXRlcy93ZWJwYWNrLXNpbXBsZQ==" title="https://github.com/vuejs-templates/webpack-simple">webpack-simple<i class="fa fa-external-link"></i></span> 模式生成的 webpack.config.js 和 package.json，并调整成实际需要的配置。</p>
+<p>配置比较简单，可以直接 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Rlb2wvcmVndWxhci1ob3R6b25lL2Jsb2IvbWFzdGVyL3dlYnBhY2suY29uZmlnLmpz" title="https://github.com/Deol/regular-hotzone/blob/master/webpack.config.js"><strong>戳我</strong><i class="fa fa-external-link"></i></span> 看一下（具体配置解释直接查阅 <span class="exturl" data-url="aHR0cHM6Ly93ZWJwYWNrLmpzLm9yZy9jb25maWd1cmF0aW9uL291dHB1dC8jb3V0cHV0LWxpYnJhcnl0YXJnZXQ=" title="https://webpack.js.org/configuration/output/#output-librarytarget">文档<i class="fa fa-external-link"></i></span>）。</p>
+<h2 id="3-将组件打包输出成多种模式-important"><a href="#3-将组件打包输出成多种模式-important" class="headerlink" title="3. 将组件打包输出成多种模式!important"></a>3. 将组件打包输出成多种模式!important</h2><p>既然是 RegularJS 组件，那么打包后的组件无论是直接以 <code>&lt;script&gt;</code> 标签形式引入，或者用 AMD / CommonJS 方式引入都应该可以使用。</p>
+<h3 id="第一部分，webpack-配置"><a href="#第一部分，webpack-配置" class="headerlink" title="第一部分，webpack 配置"></a>第一部分，webpack 配置</h3><p>与此相关的配置项是这三个：</p>
+<ul>
+<li>output.library &amp;&amp; output.libraryTarget</li>
+</ul>
+<p>library 属性能让打包后的整个组件被当成一个全局变量使用。考虑命名污染及冲突，可以将 <code>library</code> 属性的值起得相对复杂些，如 <code>regularHotZone</code>。</p>
+<p>另外，为了让组件在多种模式下都可运行，使用 <code>libraryTarget</code> 配置该组件的暴露方式为 <strong>umd</strong>。该模式意味着组件在 CommonJS、AMD 及 global 环境下都能运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">    library: &apos;regularHotZone&apos;,</span><br><span class="line">    libraryTarget: &apos;umd&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>externals</li>
+</ul>
+<p>这个配置是为了排除外部依赖，不将它们一起打包进去。对于 RegularJS 组件来说，并不需要把 RegularJS 也打包进去，此时就应该用 externals。</p>
+<p>而配置中是这么写的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">externals: &#123;</span><br><span class="line">    regularjs: &#123;</span><br><span class="line">        root: &apos;Regular&apos;,</span><br><span class="line">        commonjs: &apos;regularjs&apos;,</span><br><span class="line">        commonjs2: &apos;regularjs&apos;,</span><br><span class="line">        amd: &apos;regularjs&apos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这是由于上述的 libraryTarget 设置为 umd，那么这里必须设置成这种形式，RegularJS 才能在 AMD 和 CommonJS 模式下通过 regularjs 被访问，但在全局变量下通过 Regular 被访问。</p>
+<h3 id="第二部分，package-配置"><a href="#第二部分，package-配置" class="headerlink" title="第二部分，package 配置"></a>第二部分，package 配置</h3><p>另一方面，我们需要在组件的 package.json 中需要将 RegularJS 设置为同伴依赖 (<code>peerDependencies</code>)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 建议：不同于一般的依赖，同伴依赖需要降低版本限制。不应该将同伴依赖锁定在特定的版本号。</span><br><span class="line">&quot;peerDependencies&quot;: &#123;</span><br><span class="line">    &quot;regularjs&quot;: &quot;^0.4.3&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为 RegularJS 组件是 RegularJS 框架的拓展，它不能脱离于框架独立存在。</p>
+<p>也就是说，如果需要以 npm 包形式引入 RegularJS 组件，那么 RegularJS 框架必须也被引入，不管是以 npm 包形式引入，还是用 <code>script</code> 标签引入并配置 externals。</p>
+<p><strong>注意</strong>：如果安装组件包时，找不到 RegularJS 或者其<strong>不符合同伴依赖的版本要求</strong>，终端将抛出警告：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">`-- UNMET PEER DEPENDENCY regularjs@^0.4.3</span><br><span class="line"></span><br><span class="line">npm WARN regular-hotzone@0.1.14 requires a peer of regularjs@^0.4.3 but none was installed.</span><br></pre></td></tr></table></figure>
+<p>npm 使用的版本规则「<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm5wbWpzLmNvbS9taXNjL3NlbXZlcg==" title="https://docs.npmjs.com/misc/semver"><strong>在此</strong><i class="fa fa-external-link"></i></span>」查看。</p>
+<p>可以知道，上面设定 RegularJS 版本为 <code>^0.4.3</code>，相当于 version &gt;= 0.4.3 &amp;&amp; version &lt; 0.5.0。</p>
+<h2 id="4-进入开发"><a href="#4-进入开发" class="headerlink" title="4. 进入开发"></a>4. 进入开发</h2><p>跑个 <code>npm run startdev</code>，balabalabala…</p>
+<h2 id="5-包装工作"><a href="#5-包装工作" class="headerlink" title="5. 包装工作"></a>5. 包装工作</h2><ol>
+<li><p>完成整体开发后，修改 package.json 中的 version（版本介绍「<span class="exturl" data-url="aHR0cDovL3NlbXZlci5vcmcvbGFuZy96aC1DTi8=" title="http://semver.org/lang/zh-CN/"><strong>在此</strong><i class="fa fa-external-link"></i></span>」，每次发布都必须修改，否则无法发布），并利用 <code>npm run build</code> 打包输出 dist 文件夹。</p>
+</li>
+<li><p>编写 Readme，可参考「<span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzI5MTAwODE2L2Fuc3dlci82ODc1MDQxMA==" title="https://www.zhihu.com/question/29100816/answer/68750410">如何写好 Github 中的 readme？ - 知乎<i class="fa fa-external-link"></i></span>」。</p>
+</li>
+</ol>
+<h2 id="6-最终发布"><a href="#6-最终发布" class="headerlink" title="6. 最终发布"></a>6. 最终发布</h2><p>最终阶段，进入 <span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tLw==" title="https://www.npmjs.com/">https://www.npmjs.com/<i class="fa fa-external-link"></i></span> 完成注册后，执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm publish</span><br></pre></td></tr></table></figure>
+<p>完成登录后可能会发布失败，因为我们可能会将 npm 源设置为淘宝源，此时需要添加 <code>//</code> 暂时将其注释：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ vi ~/.npmrc</span><br><span class="line"></span><br><span class="line">//registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+<p>保存后重新执行发布操作即可。</p>
+<p>此时我们可以通过 npms.io 搜索 npm 包名，如：</p>
+<p><img src="http://aeo.ijarvis.cn/npms.png" alt="image"></p>
+<p>并通过其<span class="exturl" data-url="aHR0cHM6Ly9ucG1zLmlvL2Fib3V0" title="https://npms.io/about"><strong>分析</strong><i class="fa fa-external-link"></i></span>增强 npm 包的质量，最简单的可以有：</p>
+<ul>
+<li>完善 Readme、license、.gitignore 等；</li>
+<li>接入 <span class="exturl" data-url="aHR0cHM6Ly90cmF2aXMtY2kub3JnLw==" title="https://travis-ci.org/">Travis CI<i class="fa fa-external-link"></i></span> 等，并确保覆盖率；</li>
+<li>去除过时依赖，减少依赖的脆弱性；</li>
+<li>增加专属站点，添加 Readme 上面的 icons；</li>
+<li>接入 ESLint，实现静态代码检查；</li>
+<li>…</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/10/web/XML 武装的可配置组件/" rel="next" title="XML 武装的可配置组件">
+                <i class="fa fa-chevron-left"></i> XML 武装的可配置组件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/21/web/EyeDropper 开发实践/" rel="prev" title="Eyedropper 开发实践">
+                Eyedropper 开发实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTQyOC8xNzk3NQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Aeo">
+            
+              <p class="site-author-name" itemprop="name">Aeo</p>
+              <p class="site-description motion-element" itemprop="description">Reboot Everything.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Rlb2w=" title="GitHub &rarr; https://github.com/Deol"><i class="fa fa-fw fa-github"></i>GitHub</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9hZW9sdXMw" title="知乎 &rarr; https://www.zhihu.com/people/aeolus0"><i class="fa fa-fw fa-university"></i>知乎</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuZG91YmFuLmNvbS9wZW9wbGUvYWVvbA==" title="豆瓣 &rarr; https://www.douban.com/people/aeol"><i class="fa fa-fw fa-book"></i>豆瓣</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93ZWliby5jb20vNjE5NTE1MDE2" title="微博 &rarr; https://weibo.com/619515016"><i class="fa fa-fw fa-weibo"></i>微博</span>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目录"><span class="nav-number">1.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-项目初始化"><span class="nav-number">2.</span> <span class="nav-text">1. 项目初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-在-GitHub-上创建项目仓库，添加-README-和-License"><span class="nav-number">2.0.1.</span> <span class="nav-text">1. 在 GitHub 上创建项目仓库，添加 README 和 License</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-clone-到本地，设置-git-config"><span class="nav-number">2.0.2.</span> <span class="nav-text">2. clone 到本地，设置 git config</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-执行-npm-init，生成-package-json"><span class="nav-number">2.0.3.</span> <span class="nav-text">3. 执行 npm init，生成 package.json</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#2-开发环境准备，安装基础依赖"><span class="nav-number">3.</span> <span class="nav-text">2. 开发环境准备，安装基础依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-将组件打包输出成多种模式-important"><span class="nav-number">4.</span> <span class="nav-text">3. 将组件打包输出成多种模式!important</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一部分，webpack-配置"><span class="nav-number">4.1.</span> <span class="nav-text">第一部分，webpack 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二部分，package-配置"><span class="nav-number">4.2.</span> <span class="nav-text">第二部分，package 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-进入开发"><span class="nav-number">5.</span> <span class="nav-text">4. 进入开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-包装工作"><span class="nav-number">6.</span> <span class="nav-text">5. 包装工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-最终发布"><span class="nav-number">7.</span> <span class="nav-text">6. 最终发布</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aeo</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v6.6.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2017/03/04/skill/如何把一个 RegularJS 组件打成 npm 包/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+    
+  
+  <script src="//cdn.jsdelivr.net/npm/pangu@3.3.0/dist/browser/pangu.min.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.6.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本篇主要总结「XML 解析并生成组件」相关功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XML 武装的可配置组件">
+<meta property="og:url" content="http://aeodu.com/2017/01/10/web/XML 武装的可配置组件/index.html">
+<meta property="og:site_name" content="Aeo&#39;s Blog">
+<meta property="og:description" content="本篇主要总结「XML 解析并生成组件」相关功能。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://aeo.ijarvis.cn/xml/component.jpg">
+<meta property="og:image" content="http://aeo.ijarvis.cn/xml/checker.jpg">
+<meta property="og:image" content="http://aeo.ijarvis.cn/xml/XMLDocument.jpg">
+<meta property="og:image" content="http://aeo.ijarvis.cn/xml/component.jpg">
+<meta property="og:updated_time" content="2020-04-04T17:42:55.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XML 武装的可配置组件">
+<meta name="twitter:description" content="本篇主要总结「XML 解析并生成组件」相关功能。">
+<meta name="twitter:image" content="http://aeo.ijarvis.cn/xml/component.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="http://aeodu.com/2017/01/10/web/XML 武装的可配置组件/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>XML 武装的可配置组件 | Aeo's Blog</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?da8ea7f8728f82dbfaba14300507b7d0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Aeo's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-web">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Web" rel="section"><i class="menu-item-icon fa fa-fw fa-html5"></i> <br>Web</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-skill">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Skill" rel="section"><i class="menu-item-icon fa fa-fw fa-magic"></i> <br>Skill</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-linux">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/Linux" rel="section"><i class="menu-item-icon fa fa-fw fa-linux"></i> <br>Linux</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://aeodu.com/2017/01/10/web/XML 武装的可配置组件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Aeo">
+      <meta itemprop="description" content="Reboot Everything.">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Aeo's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">XML 武装的可配置组件
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-01-10 21:11:11" itemprop="dateCreated datePublished" datetime="2017-01-10T21:11:11+00:00">2017-01-10</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Web/" itemprop="url" rel="index"><span itemprop="name">Web</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇主要总结「XML 解析并生成组件」相关功能。<br><a id="more"></a></p>
+<h3 id="一、模块重构"><a href="#一、模块重构" class="headerlink" title="一、模块重构"></a>一、模块重构</h3><p>在一期需求开发中：</p>
+<ul>
+<li>后端返回的所有数据直接挂在 <code>Regular.data</code> 的一个子对象中；</li>
+<li>一个页面的所有逻辑全部写在一个 html 中。</li>
+</ul>
+<p>简单来讲，刚开始的新手村任务完成得拓展性太差。<br>因此二期开发的初期，代码在拓展时逻辑非常难捋，一团乱麻。</p>
+<p>这时候必须进行重构，重构流程分三步：</p>
+<ol>
+<li><strong>模块划分</strong></li>
+</ol>
+<p>基于交互稿，依据页面逻辑划分模块。</p>
+<ol start="2">
+<li><strong>数据划分</strong></li>
+</ol>
+<ul>
+<li>根据页面模块划分，将返回数据分配到不同的模块对应的对象中</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">data.baseInfo = &#123;&#125;;</span><br><span class="line">data.rejectInfo = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">data.templateList = [];</span><br><span class="line">data.templateInfo = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">data.materialList = [];</span><br><span class="line">data.materialInfo = &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>默认值设定</li>
+</ul>
+<p>在一期时，由于直接将返回数据存入 <code>Regular.data</code> 中，且后端返回的数据不可控，因此在页面模板中出现了大量的存在判断：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;exampleInfo ? exampleInfo.reason : '无'&#125;<span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>但其实并不应该在模板中做这样大量的存在判断，而是在数据分配阶段，就对所有返回数据进行统一的默认值设置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data.baseInfo = &#123;</span><br><span class="line">    pageName: res.pageName || <span class="string">''</span>,</span><br><span class="line">    deliveryors: res.deliveryors || [],</span><br><span class="line">    <span class="comment">// ...其它数据</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>统一的状态控制</li>
+</ul>
+<p>页面需要进行「查看」/「编辑」、「自己上传素材」/「根据素材 ID 上传」等的状态切换。<br>这部分数据都是页面配置数据，统一保存到 config 对象中，方便各组件使用，也易于拓展。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data.config = &#123;</span><br><span class="line">    isEdit: <span class="number">0</span>,</span><br><span class="line">    uploadType: <span class="number">0</span>,</span><br><span class="line">    <span class="comment">// ...其它配置数据</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用局部变量</li>
+</ul>
+<p>① 页面渲染时或后续操作时需要使用的数据才存储到 <code>data</code> 中，不要把所有数据都挂到 <code>data</code> 上；</p>
+<p>② 用于数据的初始化处理的高频数据，使用局部变量缓存，可以保持 <code>data</code> 干净；</p>
+<p>③ 作用域链较长的数据，使用局部变量缓存，减少对象属性的查找次数，提升代码可读性。</p>
+<ol start="3">
+<li><strong>组件封装</strong></li>
+</ol>
+<p>完成「模块划分」和「数据划分」后，就可以把原来各个模块的 <strong>页面逻辑 (html)</strong> 和 <strong>操作逻辑 (function)</strong> 抽取出来，封装成各个模块组件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"m-form m-material"</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 时间和说明 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">deliveryInfo</span></span></span><br><span class="line"><span class="tag">        <span class="attr">config</span>=<span class="string">&#123;config&#125;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">baseInfo</span>=<span class="string">&#123;baseInfo&#125;</span></span></span><br><span class="line"><span class="tag">    &gt;</span><span class="tag">&lt;/<span class="name">deliveryInfo</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 样式表 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">styleList</span></span></span><br><span class="line"><span class="tag">        <span class="attr">config</span>=<span class="string">&#123;config&#125;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">templateList</span>=<span class="string">&#123;templateList&#125;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">templateInfo</span>=<span class="string">&#123;templateInfo&#125;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">on-changeStyle</span>=<span class="string">&#123;this.changeItem($event)&#125;</span></span></span><br><span class="line"><span class="tag">    &gt;</span><span class="tag">&lt;/<span class="name">styleList</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 上传形式选择模块 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">uploadWay</span></span></span><br><span class="line"><span class="tag">        <span class="attr">config</span>=<span class="string">&#123;config&#125;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">templateInfo</span>=<span class="string">&#123;templateInfo&#125;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">materialInfo</span>=<span class="string">&#123;materialInfo&#125;</span></span></span><br><span class="line"><span class="tag">    &gt;</span><span class="tag">&lt;/<span class="name">uploadWay</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 素材模块 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">material</span></span></span><br><span class="line"><span class="tag">        <span class="attr">config</span>=<span class="string">&#123;config&#125;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">templateInfo</span>=<span class="string">&#123;templateInfo&#125;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">materialInfo</span>=<span class="string">&#123;materialInfo&#125;</span></span></span><br><span class="line"><span class="tag">    &gt;</span><span class="tag">&lt;/<span class="name">material</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这时候页面组件更多作为一个纯组件容器，模块内部交互操作由模块组件自行负责。</p>
+<p>其中需求核心 —— 涉及「XML 解析」的素材逻辑，就可以交给 material 素材组件独立完成，也方便其他页面复用该模块。</p>
+<hr>
+<h3 id="二、核心需求描述"><a href="#二、核心需求描述" class="headerlink" title="二、核心需求描述"></a>二、核心需求描述</h3><p>二期需求的核心是涉及「XML 解析」的组件可配置功能。</p>
+<blockquote>
+<p><strong>为什么要用 XML 这种结构来实现组件可配置？</strong></p>
+<p>答：因为 XML 有 XSD（类似 HTML 的 DTD）可以进行格式校验，确保 XML 格式正确。</p>
+</blockquote>
+<p>该系统的 XML 文档中总共可能有以下十种素材：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">我</th>
+<th style="text-align:center">们</th>
+<th style="text-align:center">是</th>
+<th style="text-align:center">素</th>
+<th style="text-align:center">材</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1. 图片</td>
+<td style="text-align:center">2. 链接</td>
+<td style="text-align:center">3. 文本</td>
+<td style="text-align:center">4. 枚举</td>
+<td style="text-align:center">5. 数量</td>
+</tr>
+<tr>
+<td style="text-align:center">6. 商品</td>
+<td style="text-align:center">7. 专辑</td>
+<td style="text-align:center">8. 品牌</td>
+<td style="text-align:center">9. 优惠券</td>
+<td style="text-align:center">10. 列表</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注：列表素材中还可能包含其它九种素材的任意几种。</p>
+</blockquote>
+<p>以下面的 XML 文档内容为例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">image</span> <span class="attr">necessary</span>=<span class="string">"true"</span> <span class="attr">key</span>=<span class="string">"avatar"</span> <span class="attr">desc</span>=<span class="string">"一张大图"</span> <span class="attr">format</span>=<span class="string">"jpg"</span> <span class="attr">width</span>=<span class="string">"960"</span> <span class="attr">height</span>=<span class="string">"210"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">itemList</span> <span class="attr">necessary</span>=<span class="string">"true"</span> <span class="attr">key</span>=<span class="string">"itemList"</span> <span class="attr">desc</span>=<span class="string">"图片列表"</span> <span class="attr">minLimit</span>=<span class="string">"1"</span> <span class="attr">maxLimit</span>=<span class="string">"8"</span> &gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">goods</span> <span class="attr">necessary</span>=<span class="string">"true"</span> <span class="attr">key</span>=<span class="string">"goodsId"</span> <span class="attr">isInStock</span>=<span class="string">"false"</span> <span class="attr">desc</span>=<span class="string">"商品ID"</span> <span class="attr">explain</span>=<span class="string">"请填写母婴类目商品"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">enum</span> <span class="attr">necessary</span>=<span class="string">"true"</span> <span class="attr">key</span>=<span class="string">"type"</span> <span class="attr">desc</span>=<span class="string">"下拉选择框"</span> <span class="attr">enum</span>=<span class="string">"1|普通,2|签到,3|分享"</span> <span class="attr">explain</span>=<span class="string">"选择框描述字段"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">number</span> <span class="attr">necessary</span>=<span class="string">"true"</span> <span class="attr">key</span>=<span class="string">"number"</span> <span class="attr">desc</span>=<span class="string">"商品数量"</span> <span class="attr">explain</span>=<span class="string">"商品数量"</span> <span class="attr">min</span>=<span class="string">"1"</span> <span class="attr">max</span>=<span class="string">"100"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">itemList</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上述文档中素材的结构为：</p>
+<ol>
+<li>「图片」素材；</li>
+<li>「列表」素材：<ol>
+<li>「商品」素材；</li>
+<li>「枚举」素材；</li>
+<li>「数量」素材。</li>
+</ol>
+</li>
+</ol>
+<p>基于 XML 中存放的格式定义，XML 有<strong>三大重任</strong>：</p>
+<ol>
+<li>生成空白的素材数据，用于用户填写和提交：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> materialInfo = &#123;</span><br><span class="line">    avatar: <span class="string">''</span>,</span><br><span class="line">    itemList: [</span><br><span class="line">        &#123;</span><br><span class="line">            goodsId: <span class="string">''</span>,</span><br><span class="line">            type: <span class="string">''</span>,</span><br><span class="line">            number: <span class="string">''</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// 其他项，与第一项结构相同</span></span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>根据 XML 结构生成素材组件（结构复杂程度决定素材组件的复杂程度）：</li>
+</ol>
+<p><img src="http://aeo.ijarvis.cn/xml/component.jpg" alt="component"></p>
+<ol start="3">
+<li>为素材组件的校验规则提供信息，如「是否必填」、「边界值」、「宽高」等限制：</li>
+</ol>
+<p><img src="http://aeo.ijarvis.cn/xml/checker.jpg" alt="checker"></p>
+<hr>
+<h3 id="三、XML-解析"><a href="#三、XML-解析" class="headerlink" title="三、XML 解析"></a>三、XML 解析</h3><p>XML 解析流程分为以下两步：</p>
+<ol>
+<li>将接口返回的 XML 字符串转换为 XML 文档</li>
+</ol>
+<p>这里主要利用的是 <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIubW96aWxsYS5vcmcvZW4tVVMvZG9jcy9XZWIvQVBJL0RPTVBhcnNlcg==" title="https://developer.mozilla.org/en-US/docs/Web/API/DOMParser">DOMParser<i class="fa fa-external-link"></i></span> 对象和它的 <code>parseFromString</code> 方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 举例用的 XML 字符串</span></span><br><span class="line"><span class="keyword">var</span> xmlString = <span class="string">'&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;&lt;module necessary=\"true\" desc=\"大图一拖八模块\" thumbnail=\"imageUrl\" preview=\"http://shared.ydstatic.com/r/2.0/p/fanyi-logo-s.png\"&gt;&lt;image necessary=\"true\" key=\"avatar\" desc=\"一张大图\" format=\"jpg\" width=\"960\" height=\"210\"/&gt;&lt;itemList necessary=\"true\" key=\"itemList\" desc=\"图片列表\" minLimit=\"1\" maxLimit=\"8\"&gt;&lt;module className=\"com.netease.kaola.Item.class\" desc=\"\"&gt;&lt;goods necessary=\"true\" key=\"goodsId\" isInStock=\"false\" desc=\"商品ID\" explain=\"请填写母婴类目商品\"/&gt;&lt;enum necessary=\"true\" key=\"type\" desc=\"下拉选择框\" enum=\"1|普通,2|签到,3|分享\" explain=\"选择框描述字段\" /&gt;&lt;number necessary=\"true\" key=\"number\" desc=\"商品数量\" explain=\"商品数量\" min=\"1\" max=\"100\" /&gt;&lt;/module&gt;&lt;/itemList&gt;&lt;/module&gt;'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> parser = <span class="keyword">new</span> DOMParser();</span><br><span class="line"><span class="keyword">var</span> doc = parser.parseFromString(xmlString, <span class="string">"application/xml"</span>);</span><br></pre></td></tr></table></figure>
+<p>处理后生成如下的 XML 文档：</p>
+<p><img src="http://aeo.ijarvis.cn/xml/XMLDocument.jpg" alt="XML Document"></p>
+<blockquote>
+<p>注：由 <span class="exturl" data-url="aHR0cDovL2Nhbml1c2UuY29tLyNzZWFyY2g9RE9NUGFyc2U=" title="http://caniuse.com/#search=DOMParse">caniuse<i class="fa fa-external-link"></i></span> 可知，<code>DOMParser</code> 在现代浏览器中兼容性良好。</p>
+</blockquote>
+<ol start="2">
+<li>将 XML 文档转换为 JSON 对象</li>
+</ol>
+<p>对 XML 文档进行「<strong>深度优先先序遍历</strong>」，对每个元素节点（elementNode，<code>nodeType</code> 为 1）进行处理，生成一个 JSON 对象。</p>
+<p>以 image 元素节点的处理为例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">image</span> <span class="attr">necessary</span>=<span class="string">"true"</span> <span class="attr">key</span>=<span class="string">"avatar"</span> <span class="attr">desc</span>=<span class="string">"一张大图"</span> <span class="attr">format</span>=<span class="string">"jpg"</span> <span class="attr">width</span>=<span class="string">"960"</span> <span class="attr">height</span>=<span class="string">"210"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>处理后（关键词：<code>nodeName</code>、<code>attributes</code>）生成的 JSON 对象长这样：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">avatar: &#123;</span><br><span class="line">    $attr: &#123;</span><br><span class="line">        necessary: <span class="literal">true</span>,</span><br><span class="line">        key: <span class="string">'avatar'</span>,</span><br><span class="line">        desc: <span class="string">'一张大图'</span>,</span><br><span class="line">        format: <span class="string">'jpg'</span>,</span><br><span class="line">        width: <span class="string">'960'</span>,</span><br><span class="line">        height: <span class="string">'210'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    $target: <span class="string">'image'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出：</p>
+<ul>
+<li>属性名：元素节点 <code>attributes</code> 中的 <code>key</code> 值，与素材数据的结构对应；</li>
+<li><code>$attr</code>：格式信息，存放着该素材所有的格式限制和信息提示；</li>
+<li><code>$target</code>：类型说明，利用该属性识别素材的类型。</li>
+</ul>
+<p>经过一次完整遍历后生成的终极 JSON 对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 数据不完全展开</span></span><br><span class="line"><span class="keyword">var</span> scheme = &#123;</span><br><span class="line">    $attr: &#123;&#125;,</span><br><span class="line">    avatar: &#123;</span><br><span class="line">        $attr: &#123;&#125;,</span><br><span class="line">        $target: <span class="string">'image'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    itemList: &#123;</span><br><span class="line">        $attr: &#123;&#125;,</span><br><span class="line">        $target: <span class="string">'itemList'</span>,</span><br><span class="line">        info: [</span><br><span class="line">            &#123;</span><br><span class="line">                goodsId: &#123;</span><br><span class="line">                    $attr: &#123;&#125;,</span><br><span class="line">                    $target: <span class="string">"goods"</span></span><br><span class="line">                &#125;,</span><br><span class="line">                number: &#123;</span><br><span class="line">                    $attr: &#123;&#125;,</span><br><span class="line">                    $target: <span class="string">"number"</span></span><br><span class="line">                &#125;,</span><br><span class="line">                type: &#123;</span><br><span class="line">                    $attr: &#123;&#125;,</span><br><span class="line">                    $target: <span class="string">"enum"</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="comment">// 其它项，与第一项格式相同</span></span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：XML 解析时需要注意 Boolean 类型的值转换。</p>
+<p>若转换成 <code>&#39;false&#39;</code>，在逻辑判断时造成的错误可能就比较难发现。</p>
+</blockquote>
+<hr>
+<h3 id="四、可配置组件"><a href="#四、可配置组件" class="headerlink" title="四、可配置组件"></a>四、可配置组件</h3><ol>
+<li>元组件编写</li>
+</ol>
+<p>编写十种素材组件，统一放在素材组件的 <code>components</code> 文件夹中。</p>
+<p>注意：组件的格式信息统一为 <code>format</code>，配置信息统一为 <code>config</code>，方便第二步模板配置时动态替换。</p>
+<ol start="2">
+<li>模板配置</li>
+</ol>
+<p>由于「XML 解析出来的格式信息」决定「最终生成的素材组件的结构」，所以接下来需要完成模板配置。</p>
+<p>通过 templates 模板文件实现组件模板管理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    itemList: <span class="string">'&lt;itemlist scheme=&#123;scheme.$&#123;name&#125;&#125; list=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/itemlist&gt;'</span>,</span><br><span class="line">    text: <span class="string">'&lt;text format=&#123;scheme.$&#123;name&#125;.$attr&#125; text=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/text&gt;'</span>,</span><br><span class="line">    image: <span class="string">'&lt;image format=&#123;scheme.$&#123;name&#125;.$attr&#125; image=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/image&gt;'</span>,</span><br><span class="line">    link: <span class="string">'&lt;url format=&#123;scheme.$&#123;name&#125;.$attr&#125; url=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/url&gt;'</span>,</span><br><span class="line">    brand: <span class="string">'&lt;brand format=&#123;scheme.$&#123;name&#125;.$attr&#125; brandId=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/brand&gt;'</span>,</span><br><span class="line">    goods: <span class="string">'&lt;goods format=&#123;scheme.$&#123;name&#125;.$attr&#125; goodsId=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/goods&gt;'</span>,</span><br><span class="line">    coupon: <span class="string">'&lt;coupon format=&#123;scheme.$&#123;name&#125;.$attr&#125; couponId=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/coupon&gt;'</span>,</span><br><span class="line">    album: <span class="string">'&lt;album format=&#123;scheme.$&#123;name&#125;.$attr&#125; albumId=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/album&gt;'</span>,</span><br><span class="line">    enum: <span class="string">'&lt;downbox format=&#123;scheme.$&#123;name&#125;.$attr&#125; type=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/downbox&gt;'</span>,</span><br><span class="line">    number: <span class="string">'&lt;number format=&#123;scheme.$&#123;name&#125;.$attr&#125; num=&#123;info.$&#123;name&#125;&#125; config=&#123;config&#125;&gt;&lt;/number&gt;'</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里借鉴 ES6 中模板字符串的变量定义方式来做变量替换。</p>
+<p>继续用前面的例子，处理 <code>scheme</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 根据 xml 转换的 json 结构生成对应的 html 模板字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param  <span class="type">&#123;[type]&#125;</span> </span>scheme         [定义素材数据的格式]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param  <span class="type">&#123;[type]&#125;</span> </span>templates      [元组件类型：对应 html 模板 |　映射关系]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return <span class="type">&#123;[type]&#125;</span> </span>templateString [生成 html 模板字符串]</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> generateTemplate = <span class="function"><span class="keyword">function</span>(<span class="params">scheme, templates</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> templateList = [], realTemplate = <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> item <span class="keyword">in</span> scheme) &#123;</span><br><span class="line">        <span class="keyword">if</span> (scheme.hasOwnProperty(item) &amp;&amp; scheme[item].hasOwnProperty(<span class="string">'$target'</span>)) &#123;</span><br><span class="line">            templateItem = templates[scheme[item].$target].replace(</span><br><span class="line">                /\$&#123;name&#125;/g, item);</span><br><span class="line">            templateList.push(templateItem);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> templateList.join(<span class="string">''</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>前文例子生成的 <code>scheme</code> JSON 对象利用该函数处理的流程是：</p>
+<ol>
+<li>根据素材 <code>$target</code> 找到对应的模板 <code>image</code> 和 <code>itemlist</code>；</li>
+<li>将 <code>${name}</code> 替换为 <code>avatar</code> 和 <code>itemList</code>；</li>
+<li>拼接字符串并返回：</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'&lt;image format=&#123;scheme.avatar.$attr&#125; image=&#123;info.avatar&#125; config=&#123;config&#125;&gt;&lt;/image&gt;'</span></span><br><span class="line"><span class="string">'&lt;itemlist scheme=&#123;scheme.itemList&#125; list=&#123;info.itemList&#125; config=&#123;config&#125;&gt;&lt;/itemlist&gt;'</span></span><br><span class="line"><span class="comment">// 列表组件是一个子素材组件，所以 itemList 的插值是 scheme 而不是 format</span></span><br></pre></td></tr></table></figure>
+<p>itemList 列表组件内部的处理方式相同:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'&lt;goods format=&#123;scheme.goodsId.$attr&#125; goodsId=&#123;info.goodsId&#125; config=&#123;config&#125;&gt;&lt;/goods&gt;'</span></span><br><span class="line"><span class="string">'&lt;downbox format=&#123;scheme.type.$attr&#125; type=&#123;info.type&#125; config=&#123;config&#125;&gt;&lt;/downbox&gt;'</span></span><br><span class="line"><span class="string">'&lt;number format=&#123;scheme.number.$attr&#125; num=&#123;info.number&#125; config=&#123;config&#125;&gt;&lt;/number&gt;'</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>模板引入</li>
+</ol>
+<p>到这里，直接在素材组件的 html 文件中引入模板字符串即可：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;#include templateString&#125;</span><br></pre></td></tr></table></figure>
+<p>最终页面生成的素材模块为：</p>
+<p><img src="http://aeo.ijarvis.cn/xml/component.jpg" alt="component"></p>
+<hr>
+<h3 id="六、校验"><a href="#六、校验" class="headerlink" title="六、校验"></a>六、校验</h3><p>Regular UI 自带的表单验证功能只适用于平级结构，并不适合组件层级较深的情况。<br>而系统其他地方可以平稳使用该验证功能，再引入其它的验证库也没有必要。</p>
+<p>由于每个素材的 <code>format</code> 中存储着数据验证时需要的验证信息，所以可以简单利用 <code>format</code> 实现数据验证：</p>
+<ol>
+<li><p>在每个素材对应的 format 中添加 <code>isCorrect</code> 属性，作为数据验证是否通过的判断依据；</p>
+</li>
+<li><p>封装数据验证方法，一种素材对应一种验证方法，在离开当前素材组件焦点时进行元组件的数据验证；</p>
+</li>
+<li><p>封装数据验证方法，在对完整素材数据进行提交时遍历完整的素材数据，依次执行素材各自的验证方法实现验证。</p>
+</li>
+</ol>
+<p>完成验证，整个素材模块也就真正完成。</p>
+<hr>
+<h3 id="七、其他"><a href="#七、其他" class="headerlink" title="七、其他"></a>七、其他</h3><ul>
+<li>统一 API</li>
+</ul>
+<p>系统用的组件都继承于一个包含 <code>$request</code> 方法（用于发送异步请求）的组件。<br>如果一个组件模块有多处异步请求操作，那么在一份 JS 文件中要对它们进行统一修改时，定位和修改都不那么优雅。</p>
+<p>因此自己把所有的异步请求函数都都抽取出来，放在每个组件的 <code>assets</code> 子文件夹中的 <code>API.js</code> 中统一管理，并以 Promise 方式返回。</p>
+<p>例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取记录列表信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param  <span class="type">&#123;[object]&#125;</span> </span>queryInfo [获取记录列表需要的查询参数]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return <span class="type">&#123;[array]&#125;</span>           </span>[查询到符合条件的查询列表数据]</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    gettingRecordList: <span class="function"><span class="keyword">function</span>(<span class="params">queryInfo</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> reqInfo = &#123;</span><br><span class="line">            url: <span class="string">'/record?'</span> + ut.param(queryInfo),</span><br><span class="line">            opts: &#123;</span><br><span class="line">                method: <span class="string">'get'</span>,</span><br><span class="line">                timeout: <span class="number">8000</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">            $request(reqInfo.url, reqInfo.opts).then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(!!res &amp;&amp; res.code === <span class="number">200</span>) &#123;</span><br><span class="line">                    resolve(res.list || []);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    reject(<span class="string">'响应数据错误，无法获取列表信息！'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">                reject(<span class="string">'无法获取列表信息：'</span> + (err || <span class="string">'无信息'</span>));</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在 API 文件中额外封装 <code>$request</code> 函数并不合理，改为以 mixin 的方式将方法引入各组件中。</p>
+<ul>
+<li>统一自定义错误</li>
+</ul>
+<p>由上述返回的 Promise 对象，在实际调用的时候可以：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">API.gettingRecordList(queryInfo).then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (wrong) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'出现某些错误！'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...some code</span></span><br><span class="line">&#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">    Notify.warning(<span class="string">"获取失败："</span> + (err || <span class="string">'无信息'</span>));</span><br><span class="line">    <span class="built_in">console</span>.warn(<span class="string">"获取失败："</span> + (err || <span class="string">'无信息'</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Promise 的 reject 中返回的错误信息，及处理数据时抛出的错误，由 catch 函数统一输出。</p>
+<ul>
+<li>中英文区分</li>
+</ul>
+<p>在某个输入框中需要区别中英文字符长度，中文算两个字符，因为中文占宽较大。</p>
+<p>既然原因是占宽问题，那么最合适的处理方式应该是全半角区分。</p>
+<p>这时直接利用正则获取不包含在单字节编码范围内的字符，比做中英文判断更全面：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ASCII: [^\x00-\xff]</span><br><span class="line">Unicode: [^\u0000-\u00FF]</span><br></pre></td></tr></table></figure>
+<p>关于 Unicode 和 ASCII 与 JavaScript 的关系可以看看：</p>
+<p><a href="coding1">阮一峰：《字符编码笔记：ASCII，Unicode 和 UTF-8》</a></p>
+<p><a href="coding2">阮一峰：《Unicode 与 JavaScript 详解》</a></p>
+<ul>
+<li>Codewars</li>
+</ul>
+<p><a href="codewars">Codewars</a> 是一个跟 LeetCode 类似但更低调的在线编程解题网站（都支持 JavaScript）。</p>
+<p>「模板配置」部分参考了以前刷过的一道题「<a href="topic">Who likes it?</a>」的思路。</p>
+<p>没事刷刷题其实也蛮好玩的，推荐给大家。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/05/09/linux/Ubuntu grub 启动管理器配置修改/" rel="next" title="Ubuntu grub 启动管理器配置修改">
+                <i class="fa fa-chevron-left"></i> Ubuntu grub 启动管理器配置修改
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/04/skill/如何把一个 RegularJS 组件打成 npm 包/" rel="prev" title="如何把一个 RegularJS 组件打成 npm 包">
+                如何把一个 RegularJS 组件打成 npm 包 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80MTQyOC8xNzk3NQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Aeo">
+            
+              <p class="site-author-name" itemprop="name">Aeo</p>
+              <p class="site-description motion-element" itemprop="description">Reboot Everything.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0Rlb2w=" title="GitHub &rarr; https://github.com/Deol"><i class="fa fa-fw fa-github"></i>GitHub</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9hZW9sdXMw" title="知乎 &rarr; https://www.zhihu.com/people/aeolus0"><i class="fa fa-fw fa-university"></i>知乎</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuZG91YmFuLmNvbS9wZW9wbGUvYWVvbA==" title="豆瓣 &rarr; https://www.douban.com/people/aeol"><i class="fa fa-fw fa-book"></i>豆瓣</span>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <span class="exturl" data-url="aHR0cHM6Ly93ZWliby5jb20vNjE5NTE1MDE2" title="微博 &rarr; https://weibo.com/619515016"><i class="fa fa-fw fa-weibo"></i>微博</span>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、模块重构"><span class="nav-number">1.</span> <span class="nav-text">一、模块重构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、核心需求描述"><span class="nav-number">2.</span> <span class="nav-text">二、核心需求描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、XML-解析"><span class="nav-number">3.</span> <span class="nav-text">三、XML 解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、可配置组件"><span class="nav-number">4.</span> <span class="nav-text">四、可配置组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、校验"><span class="nav-number">5.</span> <span class="nav-text">六、校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、其他"><span class="nav-number">6.</span> <span class="nav-text">七、其他</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heartbeat"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Aeo</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v6.6.0</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2017/01/10/web/XML 武装的可配置组件/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+    
+  
+  <script src="//cdn.jsdelivr.net/npm/pangu@3.3.0/dist/browser/pangu.min.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.6.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
