@@ -123,7 +123,7 @@ data.config = {
 二期需求的核心是涉及「XML 解析」的组件可配置功能。
 
 > **为什么要用 XML 这种结构来实现组件可配置？**
-> 
+>
 > 答：因为 XML 有 XSD（类似 HTML 的 DTD）可以进行格式校验，确保 XML 格式正确。
 
 该系统的 XML 文档中总共可能有以下十种素材：
@@ -469,10 +469,10 @@ Unicode: [^\u0000-\u00FF]
 没事刷刷题其实也蛮好玩的，推荐给大家。
 
 [DOMParser]: https://developer.mozilla.org/en-US/docs/Web/API/DOMParser
-[XML Document]: http://7xidng.com1.z0.glb.clouddn.com/xml/XMLDocument.jpg
+[XML Document]: http://aeo.ijarvis.cn/xml/XMLDocument.jpg
 [caniuse]: http://caniuse.com/#search=DOMParse
-[component]: http://7xidng.com1.z0.glb.clouddn.com/xml/component.jpg
-[checker]: http://7xidng.com1.z0.glb.clouddn.com/xml/checker.jpg
+[component]: http://aeo.ijarvis.cn/xml/component.jpg
+[checker]: http://aeo.ijarvis.cn/xml/checker.jpg
 [coding1]: http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html
 [coding2]: http://www.ruanyifeng.com/blog/2014/12/unicode.html
 [codewars]: https://www.codewars.com

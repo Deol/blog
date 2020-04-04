@@ -85,9 +85,9 @@ src
 ## 4. 相关指令介绍
 
 > 指令一般需要返回一个函数用于指令销毁工作。
-> 
+>
 > Question: 为什么要返回销毁函数，而不是通过监听 $destroy 事件来完成？
-> 
+>
 > Answer: 因为指令的销毁并不一定伴随着组件销毁，指令的生命周期更短，一些语法元素（`if/list/include`）会导致它在组件销毁之前被重复创建和销毁。
 
 由于热区组件使用了较多的事件监听，基于上述考虑，热区操作指令中都返回了用于 **事件解绑** 的函数。
@@ -119,7 +119,7 @@ export default function (content) {
 
         function handleMouseUp() {
             // ...
-            
+
             dom.off(window, 'mousemove', handleChange);
             dom.off(window, 'mouseup', handleMouseUp);
         };
@@ -136,9 +136,9 @@ export default function (content) {
 
  1. 在 changeSize 时对可拖拽点的事件监听上，利用「事件委托」+「自定义属性」减少事件绑定，并统一处理不同方位的拖拽点：
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/dragPoint.png)
+![image](http://aeo.ijarvis.cn/dragPoint.png)
 如图所示，热区区域周围的八个小方块就是「拖拽点」。
- 
+
 ```html
 <ul r-changeSize>
     <li class="hz-u-square hz-u-square-tl" data-pointer="dealTL"></li>
@@ -172,7 +172,7 @@ function handleMouseDown(e) {
 
         // 边界值处理
         itemInfo = operations.dealEdgeValue(itemInfo, styleInfo, container);
-        
+
         // ...
     }
     function handleMouseUp() {
@@ -189,15 +189,15 @@ function handleMouseDown(e) {
 export default {
     /**
      * 改变热区大小时的边界情况处理
-     * @param {Object} itemInfo   实际使用的热区模块数据 
+     * @param {Object} itemInfo   实际使用的热区模块数据
      * @param {Object} styleInfo  操作中的热区模块数据
      * @param {Object} container  图片区域的宽高数据
      */
     dealEdgeValue(itemInfo, styleInfo, container) {},
     /**
      * 处理不同的拖拽点，大写字母表示含义：T-top，L-left，C-center，R-right，B-bottom
-     * @param  {Object} itemInfo 
-     * @param  {Number} moveX 
+     * @param  {Object} itemInfo
+     * @param  {Number} moveX
      * @param  {Number} moveY
      * @return {Object} 对过程数据进行处理
      */
@@ -218,17 +218,17 @@ export default {
 // bad
 dom.css(elem, {
     top: `${moveY}px`,
-    left: `${moveX}px` 
+    left: `${moveX}px`
 });
 
 // better
 dom.css(elem, {
-    transform: `translate(${moveX}px, ${moveY}px)` 
+    transform: `translate(${moveX}px, ${moveY}px)`
 });
 ```
 
  3. 热区尺寸单位用 % 取代 px，不同屏幕尺寸的用户都获得更好的热区操作体验。
- 
+
     但热区区域存在最小尺寸限制，需要利用 [element-resize-detector](https://www.npmjs.com/package/element-resize-detector) 对图片进行监听，在图片尺寸变化时对边界区域做兼容。
 
 ```js
@@ -260,12 +260,12 @@ export default function resizeImg(elem) {
 
 1. 使用透明小方块增强鼠标从热区区域移动到设置信息区域的体验：
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/hideBlock.png)
+![image](http://aeo.ijarvis.cn/hideBlock.png)
 （这里用灰色标识一下小方块）
 
 2. 双击热区区域弹出信息设置模态框时，利用 r-autofocus 指令自动聚焦：
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/modal.png)
+![image](http://aeo.ijarvis.cn/modal.png)
 
 同时绑定键盘监听事件，监听 Enter 键和 Esc 键，增强「确认」和「取消」体验。
 

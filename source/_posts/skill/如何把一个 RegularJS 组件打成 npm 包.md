@@ -146,7 +146,7 @@ $ vi ~/.npmrc
 
 此时我们可以通过 npms.io 搜索 npm 包名，如：
 
-![image](http://7xidng.com1.z0.glb.clouddn.com/npms.png)
+![image](http://aeo.ijarvis.cn/npms.png)
 
 并通过其[**分析**](https://npms.io/about)增强 npm 包的质量，最简单的可以有：
 
